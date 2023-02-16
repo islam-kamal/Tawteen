@@ -11,6 +11,7 @@ class ThanksScreen extends StatelessWidget {
       body: Container(
         color: kBlackColor,
         width: Shared.width,
+        height: Shared.height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -19,8 +20,8 @@ class ThanksScreen extends StatelessWidget {
               image: AssetImage(
                 ImageAssets.checked_sigin,
               ),
-              width: Shared.width * 0.3,
-              height: Shared.width * 0.3,
+              width: Shared.width * 0.25,
+              height: Shared.width * 0.25,
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: Shared.width * 0.1),

@@ -138,7 +138,7 @@ class ReviewJobRequestWidget extends StatelessWidget {
                                      width: Shared.width,
                                      height: Shared.width * 0.13,
                                      onPress: () {
-                                       customAnimatedPushNavigation(context, ThanksScreen());
+                                     customAnimatedPushNavigation(context, ThanksScreen());
 
                                      },
                                    )),
