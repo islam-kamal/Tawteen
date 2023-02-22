@@ -1,5 +1,9 @@
+
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/JobModel/all_jobs_model.dart';
 import 'package:code/src/domain/entities/search_result_entity.dart';
+import 'package:code/src/presentation/bloc/Jobs_Bloc/get_all_jobs_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AvailableJobsScreen extends StatefulWidget {
   @override
@@ -10,51 +14,71 @@ class AvailableJobsScreen extends StatefulWidget {
 }
 
 class AvailableJobsScreenState extends State<AvailableJobsScreen> {
-  List<JobEntity?> available_jobs_list = [
-    JobEntity(
-      image: ImageAssets.company1,
-      title: "مصمم جرافيك خبرة 5 سنوات",
-      publish_date: "26/1/2023",
-      end_date: "26/2/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company2,
-      title: "مصمم جرافيك",
-      publish_date: "26/1/2023",
-      end_date: "26/2/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company3,
-      title: "Graphic Designer",
-      publish_date: "26/1/2023",
-      end_date: "26/2/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company4,
-      title: "Senior Graphic Designer",
-      publish_date: "6/5/2023",
-      end_date: "26/9/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company5,
-      title: "مصمم جرافيك خبرة 5 سنوات",
-      publish_date: "26/3/2023",
-      end_date: "2/4/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company5,
-      title: "مصمم جرافيك خبرة 5 سنوات",
-      publish_date: "26/3/2023",
-      end_date: "2/4/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company5,
-      title: "مصمم جرافيك خبرة 5 سنوات",
-      publish_date: "26/3/2023",
-      end_date: "2/4/2023",
-    ),
-  ];
+/*
+  ScrollController? _controller;
+  int? _page = 1;
+  bool? _hasNextPage = true;
+  bool? _isFirstLoadRunning = false;
+  bool? _isLoadMoreRunning = false;
+  List? _contact_orders = [];
 
+  void _firstLoad() async {
+    setState(() {
+      _isFirstLoadRunning = true;
+    });
+    try {
+      getAllJobsBloc.add(GetAllJobsEvent(
+        pageSize: 1.toString()
+      ));
+    } catch (err) {
+    }
+    setState(() {
+      _isFirstLoadRunning = false;
+    });
+  }
+  void _loadMore() async {
+    if (_hasNextPage == true &&
+        _isFirstLoadRunning == false &&
+        _isLoadMoreRunning == false &&
+        _controller!.position.extentAfter < 300) {
+      setState(() {
+        _isLoadMoreRunning = true; // Display a progress indicator at the bottom
+      });
+      _page = _page! + 1; // Increase _page by 1
+      try {
+        var res = await OrdersRepository.getContractOrders(
+            contractID: widget.contractID,
+            branch_id:       Shared.contract_orders_selected_branch_id,
+            start: widget.start_date,
+            end: widget.end_date,
+            pageNumber: _page
+        );
+        final List fetched_contact_orders= res.data!;
+        if (fetched_contact_orders.length > 0) {
+          setState(() {
+            _contact_orders!.addAll(fetched_contact_orders);
+          });
+        } else {
+          setState(() {
+            _hasNextPage = false;
+          });
+
+        }
+      } catch (err) {
+      }
+      setState(() {
+        _isLoadMoreRunning = false;
+      });
+    }
+  }
+
+*/
+
+  @override
+  void initState() {
+    getAllJobsBloc.add(GetAllJobsEvent());
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return NetworkIndicator(
@@ -78,44 +102,71 @@ class AvailableJobsScreenState extends State<AvailableJobsScreen> {
                             topRight: Radius.circular(Shared.width * 0.08),
                             topLeft: Radius.circular(Shared.width * 0.08)),
                       ),
-                      child: SingleChildScrollView(
-                        child:Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Shared.width * 0.05,
-                              vertical: Shared.width * 0.05),
-                          child:  Column(
-                            children: [
-                              Padding(padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.06,
-                                vertical: Shared.width * 0.02, ),
-                                child: Row(
-                                  children: [
-                                    Text(kalljobsavailable.tr(),style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)
-                                  ],
-                                ),),
-
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: Shared.width * 0.1,
-                                ),
-                                child:ListView.builder(
-                                    itemCount: available_jobs_list.length,
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
+                      child: BlocBuilder(
+                        bloc: getAllJobsBloc,
+                        builder: (context,state){
+                          if(state is Loading){
+                            return Padding(
+                              padding: EdgeInsets.only(top: Shared.width * 0.4, ),
+                              child: Center(
+                                  child: Shared.spinkit
+                              ),
+                            );
+                          }else if(state is Done){
+                            return StreamBuilder<AllJobsModel>(
+                                stream: getAllJobsBloc.all_jobs_subject,
+                                builder: (context,snapshot){
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
                                       return Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: Shared.width * 0.02,
-                                            horizontal: Shared.width * 0.04),
-                                        child: job_search_result_element(
-                                            searchResultEntity:
-                                            available_jobs_list[index]),
+                                        padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                        child: Center(
+                                          child: Shared.spinkit
+                                        ),
                                       );
-                                    }),
-                              )   ,
+                                    case ConnectionState.done:
+                                      return Text('');
+                                    case ConnectionState.waiting:
+                                      return Padding(
+                                        padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                        child: Center(
+                                          child: Shared.spinkit
+                                        ),
+                                      );
+                                    case ConnectionState.active:
+                                      if (snapshot.hasError) {
+                                        return Center(
+                                          child: Text(snapshot.error.toString()),
+                                        );
+                                      }
+                                      else if (snapshot.data!.data!.length > 0) {
+                                        return  ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          itemCount: snapshot.data!.data!.length ,
+                                          shrinkWrap: true,
+                                         physics: NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: Shared.width * 0.02,
+                                                  horizontal: Shared.width * 0.04),
+                                              child: job_search_result_element(
+                                                  job: snapshot.data!.data![index]),
+                                            );
 
-                            ],
-                          ),
-                        ),
+                                          },
+                                        );
+                                      }
+                                      else
+                                        return no_data_widget(context: context);
+                                  }
+                                });
+
+                          }else if(state is ErrorLoading){
+                            return no_data_widget(context: context);
+                          }
+                          return Container();
+                        },
                       )
                   )
               ),
@@ -124,10 +175,13 @@ class AvailableJobsScreenState extends State<AvailableJobsScreen> {
     );
   }
 
-  Widget job_search_result_element({JobEntity? searchResultEntity}) {
+  Widget job_search_result_element({SearchedJob? job}) {
     return InkWell(
       onTap: () {
-        customAnimatedPushNavigation(context, JobDetailsScreen());
+        customAnimatedPushNavigation(context, JobDetailsScreen(
+          job_id: job!.id,
+          screen: AvailableJobsScreen(),
+        ));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -142,7 +196,20 @@ class AvailableJobsScreenState extends State<AvailableJobsScreen> {
                     padding: EdgeInsets.symmetric(
                         vertical: Shared.width * 0.01,
                         horizontal: Shared.width * 0.02),
-                    child: Image.asset(searchResultEntity!.image!))),
+                    child: FadeInImage(
+                      image: NetworkImage(baseUrl + job!.attachments!.firstWhere((element) => element.status ==1).filePath!),
+                      placeholder: AssetImage(ImageAssets.placeholder),
+                      imageErrorBuilder:
+                          (context, error, stackTrace) {
+                        return Image.asset(
+                            ImageAssets.placeholder,
+                            fit: BoxFit.cover);
+                      },
+                      fit: BoxFit.cover,
+                    )
+                )
+            ),
+
             Expanded(
                 flex: 4,
                 child: Padding(
@@ -157,7 +224,7 @@ class AvailableJobsScreenState extends State<AvailableJobsScreen> {
                             padding: EdgeInsets.symmetric(
                               vertical: Shared.width * 0.02,),
                             child: Text(
-                              searchResultEntity.title!,
+                              job.jobTitleName!,
                               style: TextStyle(
                                   fontSize: Shared.width * 0.04,
                                   fontWeight: FontWeight.bold,
@@ -176,7 +243,7 @@ class AvailableJobsScreenState extends State<AvailableJobsScreen> {
                                           color: kGreyColor),
                                     ),
                                     Text(
-                                      searchResultEntity.publish_date!,
+                                      job.publishStartDate!,
                                       style: TextStyle(
                                           fontSize: Shared.width * 0.03,
                                           color: kGreyColor),
@@ -193,7 +260,7 @@ class AvailableJobsScreenState extends State<AvailableJobsScreen> {
                                           color: kGreyColor),
                                     ),
                                     Text(
-                                      searchResultEntity.end_date!,
+                                      job.publishEndDate!,
                                       style: TextStyle(
                                           fontSize: Shared.width * 0.03,
                                           color: kGreyColor),

@@ -40,7 +40,7 @@ String kgender = "gender";
 String kmobilenumber = "mobilenumber";
 String kemail = "email";
 String kupdate = "update";
-String kspecialization = "specialization";
+String kmajor = "major";
 String keducationlevel = "educationlevel";
 String krequiredskills = "requiredskills";
 String kisthereexperience = "isthereexperience";
@@ -69,6 +69,21 @@ String kcertifications = "certifications";
 String kname = "name";
 String ksend = "send";
 String kskills =  "skills";
-
-
+String kperiod = "period";
+String kfrom = "from";
+String kto = "to";
+String kfault = "fault";
+String kcongratulations = "congratulations";
+String kremotly = "remotly";
+String konsite = "onsite";
+String kjobdescription = "jobdescription";
+String kProgramstoworkon = "Programstoworkon";
+String kpublishdate = "publishdate";
+String kexpiredate = "expiredate";
+String knodata = "nodata";
+String kcancel = "cancel";
+String kset = "set";
+String kstart_date = "start_date";
+String kend_date = "end_date";
+String kdescription = "description";
 

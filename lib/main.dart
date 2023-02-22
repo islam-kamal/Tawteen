@@ -2,6 +2,8 @@ import 'package:code/src/Base/common/file_export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
+import 'src/presentation/widgets/calendar.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,8 +58,7 @@ class MyMaterialState extends State<MyMaterial> {
   }
 
   void get_Static_data() async {
-    await PreferenceManager.getInstance()!
-        .getString(Shared.languageCode).then((value) {
+    await sharedPreferenceManager.readString(CachingKey.APP_LANGUAGE).then((value) {
       if (value == '') {
         MyMaterial.app_langauge = translator.activeLanguageCode;
       } else {

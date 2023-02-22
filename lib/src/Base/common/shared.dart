@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:get/get.dart';
+import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/Base/common/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,16 +26,36 @@ class Shared {
     Navigator.of(context, rootNavigator: true).pop('dialog');
   }
 
-  static showSnackBar({required GlobalKey<ScaffoldState> scaffoldKey,
-      required String message, BuildContext? context, Color? color}) {
-    ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
-      content: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: kWhiteColor),
-      ),
-      backgroundColor: color,
-    ));
+  static final spinkit = SpinKitFadingCircle(
+    itemBuilder: (BuildContext context, int index) {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: index.isEven ? Colors.red : Colors.green,
+        ),
+      );
+    },
+  );
+
+  static void showSnackBarView({bool? title_status, String? message, String? backend_message,
+    Color? backgroundColor, bool? success_icon}) {
+    Get.snackbar(
+        translator.translate(title_status! ? kcongratulations: kfault ),
+        backend_message?? translator.translate(message!),
+        colorText: Colors.white,
+        backgroundColor: backgroundColor ?? kRedColor,
+        icon: success_icon! ? Image.asset(
+          ImageAssets.congratulations,
+          width: 30,
+          height: 30,
+          color: kWhiteColor,
+        )
+            : Image.asset(
+          ImageAssets.error,
+          width: 30,
+          height: 30,
+          color: kWhiteColor,
+        )
+    );
   }
 
   static double width = ScreenUtil.defaultSize.width;

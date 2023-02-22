@@ -1,5 +1,7 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/pages/Profile/educational_data_widget.dart';
+import 'package:code/src/presentation/widgets/Dropdown/custom_cities_dropdown.dart';
+import 'package:code/src/presentation/widgets/Dropdown/custom_province_dropdown.dart';
 import 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
 
 class ContactInfoWidget extends StatelessWidget {
@@ -77,23 +79,26 @@ class ContactInfoWidget extends StatelessWidget {
                                       errorMessage: kEnter_the_identity.tr(),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: Shared.width * 0.03),
-                                    child: Shared.text_widget(
-                                        text: kcity.tr(),
-                                        textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                                  ),
-                                  CustomDropDown(
-                                    hint: kcity.tr(),
-                                  ),
+
                                   Padding(
                                     padding: EdgeInsets.symmetric(vertical: Shared.width * 0.03),
                                     child: Shared.text_widget(
                                         text: kregion.tr(),
                                         textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                                   ),
-                                  CustomDropDown(
+                                  CustomProvinceDropDown(
                                     hint: kregion.tr(),
+                                  ),
+
+
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: Shared.width * 0.03),
+                                    child: Shared.text_widget(
+                                        text: kcity.tr(),
+                                        textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                  ),
+                                  CustomCitiesDropDown(
+                                    hint: kcity.tr(),
                                   ),
 
 

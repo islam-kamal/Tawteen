@@ -1,8 +1,7 @@
 class CourseEntity{
-  String? image;
-  String? title;
-  String?  publish_date;
-  String? category;
+  String? course_id;
+  String? course_acedemy_id;
 
-  CourseEntity({this.title,this.image,this.category,this.publish_date});
+
+  CourseEntity({this.course_id,this.course_acedemy_id});
 }

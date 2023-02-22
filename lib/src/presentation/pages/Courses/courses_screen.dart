@@ -1,4 +1,7 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/CourseModel/course_model.dart';
+import 'package:code/src/presentation/bloc/Course_Bloc/course_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 class CoursesScreen extends StatefulWidget{
@@ -10,24 +13,12 @@ class CoursesScreen extends StatefulWidget{
 
 }
 class CoursesScreenState extends State<CoursesScreen>{
-  List<CourseEntity> course_list = [
-    CourseEntity(image:ImageAssets.look_job,
-        title: "التخطيط الاستراتيجي للمنظمات الصغيرة والمتوسطة",
-        category: "عن بعد",
-      publish_date: "26/3/2023",),
-    CourseEntity(image:ImageAssets.company1,
-        title: "التخطيط الاستراتيجي للمنظمات الصغيرة والمتوسطة",
-        category: "حضورى",
-      publish_date: "26/3/2023",),
-    CourseEntity(image:ImageAssets.company3,
-        title: "التخطيط الاستراتيجي للمنظمات الصغيرة والمتوسطة",
-        category: "عن بعد",
-      publish_date: "26/3/2023",),
-    CourseEntity(image:ImageAssets.company2,
-        title: "التخطيط الاستراتيجي للمنظمات الصغيرة والمتوسطة",
-        category: "حضورى",
-      publish_date: "26/3/2023",),
-  ];
+
+  @override
+  void initState() {
+    course_bloc.add(GetAllCoursesEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,44 +43,96 @@ class CoursesScreenState extends State<CoursesScreen>{
                             topRight: Radius.circular(Shared.width * 0.08),
                             topLeft: Radius.circular(Shared.width * 0.08)),
                       ),
-                      child: SingleChildScrollView(
-                        child:Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Shared.width * 0.05,
-                              vertical: Shared.width * 0.05),
-                          child:  Column(
-                            children: [
-                              Padding(padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.06,
-                                vertical: Shared.width * 0.02, ),
-                                child: Row(
-                                  children: [
-                                    Text(ktrainingcourses.tr(),style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)
-                                  ],
-                                ),),
-
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: Shared.width * 0.1,
-                                ),
-                                child:ListView.builder(
-                                    itemCount: course_list.length,
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
+                      child: BlocBuilder(
+                        bloc: course_bloc,
+                        builder: (context,state){
+                          if(state is Loading){
+                            return Padding(
+                              padding: EdgeInsets.only(top: Shared.width * 0.4, ),
+                              child: Center(
+                                child: Shared.spinkit,
+                              ),
+                            );
+                          }
+                          else if(state is Done){
+                            return StreamBuilder<CourseModel>(
+                                stream: course_bloc.all_courses_subject,
+                                builder: (context,snapshot){
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
                                       return Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: Shared.width * 0.02,
-                                            horizontal: Shared.width * 0.04),
-                                        child: course_element(
-                                            courseEntity: course_list[index]),
+                                        padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                        child: Center(
+                                          child: Shared.spinkit
+                                        ),
                                       );
-                                    }),
-                              )   ,
+                                    case ConnectionState.done:
+                                      return Text('');
+                                    case ConnectionState.waiting:
+                                      return Padding(
+                                        padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                        child: Center(
+                                          child: Shared.spinkit
+                                        ),
+                                      );
+                                    case ConnectionState.active:
+                                      if (snapshot.hasError) {
+                                        return Center(
+                                          child: Text(snapshot.error.toString()),
+                                        );
+                                      }
+                                      else if (snapshot.data!.data!.length > 0) {
+                                        return   SingleChildScrollView(
+                                          child:Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: Shared.width * 0.05,
+                                                vertical: Shared.width * 0.05),
+                                            child:  Column(
+                                              children: [
+                                                Padding(padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.06,
+                                                  vertical: Shared.width * 0.02, ),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(ktrainingcourses.tr(),style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)
+                                                    ],
+                                                  ),),
 
-                            ],
-                          ),
-                        ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    bottom: Shared.width * 0.1,
+                                                  ),
+                                                  child:ListView.builder(
+                                                      itemCount: snapshot.data!.data!.length,
+                                                      shrinkWrap: true,
+                                                      physics: NeverScrollableScrollPhysics(),
+                                                      itemBuilder: (context, index) {
+                                                        return Padding(
+                                                          padding: EdgeInsets.symmetric(
+                                                              vertical: Shared.width * 0.02,
+                                                              horizontal: Shared.width * 0.04),
+                                                          child: course_element(
+                                                              course: snapshot.data!.data![index]),
+                                                        );
+                                                      }),
+                                                )   ,
+
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      else
+                                        return no_data_widget(context: context);
+                                  }
+                                });
+
+                          }else if(state is ErrorLoading){
+                            return no_data_widget(context: context);
+                          }
+                          return Container();
+                        },
                       )
+
                   )
               ),
             )   ),
@@ -97,10 +140,25 @@ class CoursesScreenState extends State<CoursesScreen>{
     );
   }
 
-  Widget course_element({CourseEntity? courseEntity}) {
+  Widget course_element({Course? course}) {
+    String? course_type;
+    switch(course!.courseType){
+      case "1":
+        course_type = konsite.tr();
+        break;
+      case "2":
+        course_type = kremotly.tr();
+        break;
+    }
+
     return InkWell(
       onTap: () {
-        customAnimatedPushNavigation(context, CourseDetailsScreen());
+        customAnimatedPushNavigation(context, CourseDetailsScreen(
+          courseEntity: CourseEntity(
+            course_acedemy_id: course.academyId,
+            course_id: course.id
+          ),
+        ));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -111,7 +169,23 @@ class CoursesScreenState extends State<CoursesScreen>{
           children: [
             Expanded(
                 flex: 1,
-                child:Image.asset(courseEntity!.image!,fit: BoxFit.cover,)
+                child: Image.asset(ImageAssets.placeholder)
+
+              /*FadeInImage(
+                  image: NetworkImage(
+                      baseUrl + course!.attachments!.firstWhere((element) => element.status ==1).filePath!
+                  ),
+                  placeholder: AssetImage(ImageAssets.placeholder),
+                  imageErrorBuilder:
+                      (context, error, stackTrace) {
+                    return Image.asset(
+                        ImageAssets.placeholder,
+                        fit: BoxFit.cover);
+                  },
+                  fit: BoxFit.cover,
+                )*/
+
+
             ),
             Expanded(
                 flex: 4,
@@ -127,7 +201,7 @@ class CoursesScreenState extends State<CoursesScreen>{
                             padding: EdgeInsets.symmetric(
                               vertical: Shared.width * 0.02,),
                             child: Text(
-                              courseEntity.title!,
+                              course.title!,
                               style: TextStyle(
                                   fontSize: Shared.width * 0.04,
                                   fontWeight: FontWeight.bold,
@@ -140,7 +214,7 @@ class CoursesScreenState extends State<CoursesScreen>{
                             Expanded(
                               flex:1,
                                 child:        Text(
-                                  courseEntity.publish_date!,
+                                  course.publishStartDate!,
                                   style: TextStyle(
                                       fontSize: Shared.width * 0.03,
                                       color: kGreyColor),
@@ -149,7 +223,7 @@ class CoursesScreenState extends State<CoursesScreen>{
                             Expanded(
                                 flex:1,
                                 child:  Text(
-                                  courseEntity.category!,
+                                  course_type!,
                                   style: TextStyle(
                                       fontSize: Shared.width * 0.035,
                                       color: kGreyColor),
@@ -160,9 +234,9 @@ class CoursesScreenState extends State<CoursesScreen>{
                                 child: translator.activeLanguageCode == 'ar' ? InkWell(
                                   onTap: () async {
                                     await FlutterShare.share(
-                                        title: courseEntity.title!,
-                                        text: courseEntity.category!,
-                                        linkUrl: 'https://flutter.dev/',
+                                        title: course.title!,
+                                     //   text: course.category!,
+                                        linkUrl: '${course.url}',
                                         chooserTitle: 'Example Chooser Title');
                                   },
                                   child: Row(
@@ -179,9 +253,9 @@ class CoursesScreenState extends State<CoursesScreen>{
                                 )  : InkWell(
                                     onTap: () async {
                                       await FlutterShare.share(
-                                          title: courseEntity.title!,
-                                          text:  courseEntity.title!,
-                                          linkUrl: 'https://flutter.dev/',
+                                          title: course.title!,
+                                          //text:  courseEntity.title!,
+                                          linkUrl: '${course.url}',
                                           chooserTitle: 'Example Chooser Title');
                                     },
                                     child: Row(

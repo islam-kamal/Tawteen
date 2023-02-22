@@ -1,6 +1,11 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/CourseModel/course_details_model.dart';
+import 'package:code/src/presentation/bloc/Course_Bloc/course_bloc.dart';
+import 'package:code/src/presentation/pages/Courses/course_webview.dart';
 
 class CourseDetailsScreen extends StatefulWidget{
+  CourseEntity? courseEntity;
+  CourseDetailsScreen({this.courseEntity});
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -10,6 +15,14 @@ class CourseDetailsScreen extends StatefulWidget{
 }
 
 class CourseDetailsScreenState extends State<CourseDetailsScreen>{
+
+  @override
+  void initState() {
+    course_bloc.add(GetCourseDetailsEvent(
+      course: widget.courseEntity
+    ));
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return NetworkIndicator(
@@ -32,55 +45,112 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
                           topRight: Radius.circular(Shared.width * 0.08),
                           topLeft: Radius.circular(Shared.width * 0.08)),
                     ),
-                    child: SingleChildScrollView(
-                      child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Shared.width * 0.08,
-                              vertical: Shared.width * 0.05),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Shared.width * 0.03),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      ktrainingcourses.tr(),
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: Shared.width * 0.05,
-                              ),
-                              SizedBox(
-                                //  height: Shared.height * 0.8,
-                                  child: Padding(
-                                      padding: EdgeInsets.only(
-                                        bottom: Shared.width * 0.1,
+                    child:  BlocBuilder(
+                      bloc: course_bloc,
+                      builder: (context,state){
+                        if(state is Loading){
+                          return Padding(
+                            padding: EdgeInsets.only(top: Shared.width * 0.4, ),
+                            child: Center(
+                                child: Shared.spinkit
+                            ),
+                          );
+                        }else if(state is Done){
+                          return StreamBuilder<CourseDetailsModel>(
+                              stream: course_bloc.course_details_subject,
+                              builder: (context,snapshot){
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                    return Padding(
+                                      padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                      child: Center(
+                                          child: Shared.spinkit
                                       ),
-                                      child: Column(
-                                        children: [
-                                          course_details_header(),
-                                          course_details_body(),
-                                          Padding(
-                                              padding: EdgeInsets.symmetric(vertical: Shared.width * 0.05),
-                                              child: CustomButtonWidget(
-                                                button_text: kSubscribetothecourse.tr(),
-                                                width: Shared.width ,
-                                                height: Shared.width * 0.11,
-                                                onPress: () {
+                                    );
+                                  case ConnectionState.done:
+                                    return Text('');
+                                  case ConnectionState.waiting:
+                                    return Padding(
+                                      padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                      child: Center(
+                                          child: Shared.spinkit
+                                      ),
+                                    );
+                                  case ConnectionState.active:
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text(snapshot.error.toString()),
+                                      );
+                                    }
+                                    else  {
+                                      return   SingleChildScrollView(
+                                        child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: Shared.width * 0.08,
+                                                vertical: Shared.width * 0.05),
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: Shared.width * 0.03),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        ktrainingcourses.tr(),
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: Shared.width * 0.05,
+                                                ),
+                                                SizedBox(
+                                                  //  height: Shared.height * 0.8,
+                                                    child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                          bottom: Shared.width * 0.1,
+                                                        ),
+                                                        child: Column(
+                                                          children: [
+                                                            course_details_header(
+                                                              courseDetails: snapshot.data!.data!
+                                                            ),
+                                                            course_details_body(
+                                                                courseDetails: snapshot.data!.data!
+                                                            ),
+                                                            Padding(
+                                                                padding: EdgeInsets.symmetric(vertical: Shared.width * 0.05),
+                                                                child: CustomButtonWidget(
+                                                                  button_text: kSubscribetothecourse.tr(),
+                                                                  width: Shared.width ,
+                                                                  height: Shared.width * 0.11,
+                                                                  onPress: () {
+                                                                    customAnimatedPushNavigation(context, CourseWebView(
+                                                                      courseEntity: widget.courseEntity,
+                                                                    ));
+                                                                  },
+                                                                )),
+                                                          ],
+                                                        ))),
+                                              ],
+                                            )),
+                                      );
+                                    }
 
-                                                },
-                                              )),
-                                        ],
-                                      ))),
-                            ],
-                          )),
+                                }
+                              });
+
+                        }else if(state is ErrorLoading){
+                          return no_data_widget(context: context);
+                        }
+                        return Container();
+                      },
                     )
+
+
                 )),
 
           ),
@@ -88,7 +158,8 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
       ),
     );
   }
-  Widget course_details_header() {
+
+  Widget course_details_header({CourseDetails? courseDetails}) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Shared.width * 0.02),
@@ -102,7 +173,18 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
                   padding: EdgeInsets.symmetric(
                       vertical: Shared.width * 0.01,
                       horizontal: Shared.width * 0.02),
-                  child: Image.asset(ImageAssets.company1))),
+                  child: /*FadeInImage(
+                    image: NetworkImage(baseUrl + courseDetails!.attachments!.firstWhere((element) => element.status ==1).filePath!),
+                    placeholder: AssetImage(ImageAssets.placeholder),
+                    imageErrorBuilder:
+                        (context, error, stackTrace) {
+                      return Image.asset(
+                          ImageAssets.placeholder,
+                          fit: BoxFit.cover);
+                    },
+                    fit: BoxFit.cover,
+                  )*/Image.asset(ImageAssets.company1)
+              )),
           Expanded(
               flex: 3,
               child: Padding(
@@ -114,7 +196,7 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
                         vertical: Shared.width * 0.02,
                       ),
                       child: Text(
-                        "التخطيط الاستراتيجي للمنظمات لصغيرة والمتوسطة",
+                        "${courseDetails!.title}",
                         style: TextStyle(
                             fontSize: Shared.width * 0.04,
                             fontWeight: FontWeight.bold,
@@ -125,7 +207,17 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
     );
   }
 
-  Widget course_details_body() {
+  Widget course_details_body({CourseDetails? courseDetails}) {
+    String? course_type;
+    switch(courseDetails!.courseType){
+      case "1":
+        course_type = konsite.tr();
+        break;
+      case "2":
+        course_type = kremotly.tr();
+        break;
+    }
+
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Shared.width * 0.02),
@@ -137,77 +229,85 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.02),
                   child: Text(kAboutcourse.tr(),
                       style: TextStyle(
                           color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 15))),
               Text(
-                      "1- مطلوب مصمم سعودي تعمل عن بعد دعائية\n 2- لمنتجات الشركة التواصل الاجتماعي تويتر\n 3-سناب شاب ,انستجرام اخرى إن وجد\n",
+                      "${courseDetails.description}",
                       style: TextStyle(
                         //fontWeight: FontWeight.bold,
                           fontSize: 15)),
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.02),
                   child: Text(krequiredskills.tr(),
                       style: TextStyle(
                           color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 15))),
-              Text(
-                      "Adobe Photoshop \nAdobe After Effects \nCinema 4D- Maxon",
-                      style: TextStyle(
-                        //fontWeight: FontWeight.bold,
-                          fontSize: 15)),
+              ListView.builder(
+                  itemCount: courseDetails.skillsIdList!.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context,index){
+                return Text("${index+1} - ${courseDetails.skillsIdList![index].skillName}",
+                    style: TextStyle(
+                      //fontWeight: FontWeight.bold,
+                        fontSize: 15));
+              }),
+
 
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.02),
                   child: Text(kAcademyname.tr(),
                       style: TextStyle(
                           color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 15))),
               Text(
-                  "Adobe Photoshop ",
+                  "${courseDetails.academyName}",
                   style: TextStyle(
                     //fontWeight: FontWeight.bold,
                       fontSize: 15)),
 
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.02),
                   child: Text(kNumberofseats.tr(),
                       style: TextStyle(
                           color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 15))),
               Text(
-                  "23",
+                  "${courseDetails.noOfSeats}",
                   style: TextStyle(
                     //fontWeight: FontWeight.bold,
                       fontSize: 15)),
 
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.02),
                   child: Text(kcourselocation.tr(),
                       style: TextStyle(
                           color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 15))),
               Text(
-                  "Cinema 4D- Maxon",
+                  "${courseDetails.provinceName},${courseDetails.cityName}",
                   style: TextStyle(
                     //fontWeight: FontWeight.bold,
                       fontSize: 15)),
 
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.02),
                   child: Text(kcoursetype.tr(),
                       style: TextStyle(
                           color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 15))),
               Text(
-                  "عن بعد",
+                  "${course_type}",
                   style: TextStyle(
                     //fontWeight: FontWeight.bold,
                       fontSize: 15)),
 
-             Row(
+              Padding(
+                  padding: EdgeInsets.only(bottom: Shared.width * 0.05),
+                  child:    Row(
                crossAxisAlignment: CrossAxisAlignment.start,
                mainAxisAlignment: MainAxisAlignment.start,
                children: [
@@ -222,7 +322,7 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
                                  color: kGreenColor,
                                  fontWeight: FontWeight.bold, fontSize: 15))),
                      Text(
-                         "15 ديسمبر 2023",
+                         "${courseDetails.publishStartDate}",
                          style: TextStyle(
                            //fontWeight: FontWeight.bold,
                              fontSize: 15)),
@@ -237,7 +337,7 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
                                  color: kGreenColor,
                                  fontWeight: FontWeight.bold, fontSize: 15))),
                      Text(
-                         "30 ديسمبر 2023",
+                         "${courseDetails.publishEndDate}",
                          style: TextStyle(
                            //fontWeight: FontWeight.bold,
                              fontSize: 15)),
@@ -245,7 +345,7 @@ class CourseDetailsScreenState extends State<CourseDetailsScreen>{
                  ))
                ],
              )
-
+    )
 
             ],
           ),

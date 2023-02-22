@@ -1,6 +1,5 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/pages/Profile/personal_info_widget.dart';
-import 'package:code/src/presentation/widgets/custom_skills_dropdown.dart';
 import 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
 import 'package:provider/provider.dart';
 

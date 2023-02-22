@@ -1,0 +1,65 @@
+import 'dart:async';
+
+import 'package:code/src/Base/common/file_export.dart';
+import 'package:rxdart/rxdart.dart';
+
+class SignUpBloc extends Bloc<AppEvent,AppState> with Validator{
+
+  SignUpBloc():super(Start()){
+    on<click>(_onClick);
+  }
+
+  final fristname_controller = BehaviorSubject<String>();
+  final mobile_controller = BehaviorSubject<String>();
+  final email_controller = BehaviorSubject<String>();
+  final password_controller = BehaviorSubject<String>();
+  final lastname_controller = BehaviorSubject<String>();
+
+  Function(String) get fristname_change => fristname_controller.sink.add;
+  Function(String) get mobile_change  => mobile_controller.sink.add;
+  Function(String) get email_change => email_controller.sink.add;
+  Function(String) get password_change => password_controller.sink.add;
+  Function(String) get lastname_change => lastname_controller.sink.add;
+
+  Stream<String> get fristname => fristname_controller.stream.transform(firstname_validator);
+  Stream<String> get mobile => mobile_controller.stream.transform(phone_validator);
+  Stream<String> get email => email_controller.stream.transform(email_validator);
+  Stream<String> get password => password_controller.stream.transform(password_validator);
+  Stream<String> get lastname => lastname_controller.stream.transform(lastname_validator);
+
+  Stream<bool> get submitCheck => Rx.combineLatest5(fristname, mobile, email, password,lastname ,(a, b, c, d,e) => true);
+
+  Future<void> _onClick(click event , Emitter<AppState> emit)async{
+    emit( Loading(model: null));
+    var response = await AuthenticationRepository.signUp(
+      firstname:   fristname_controller.value,
+      mobile:  mobile_controller.value,
+      email: email_controller.value,
+      password: password_controller.value,
+      lastname:  lastname_controller.value,
+    );
+    if(response.success == "true" ){
+      sharedPreferenceManager.writeData(CachingKey.EMAIL,email_controller.value);
+      emit( Done(model:response));
+    }
+    else if (response.success == "false"){
+        emit( ErrorLoading(model: response));
+    }
+  }
+
+
+
+  @override
+  void dispose() {
+    fristname_controller.close();
+    mobile_controller.close();
+    email_controller.close();
+    password_controller.close();
+  }
+
+
+}
+
+SignUpBloc signUpBloc = new SignUpBloc();
+
+

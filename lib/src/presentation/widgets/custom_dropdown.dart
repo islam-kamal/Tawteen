@@ -1,4 +1,5 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/CitiesModel/cities_model.dart';
 import 'package:code/src/domain/entities/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 
 class CustomDropDown extends StatefulWidget {
   String? hint;
+
   CustomDropDown({this.hint});
   @override
   _CustomDropDownState createState() => _CustomDropDownState();
@@ -17,7 +19,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   final _popupBuilderKey = GlobalKey<DropdownSearchState<String>>();
 
   bool? _popupBuilderSelection = false;
-
+  List<City> cities_list = [];
   @override
   Widget build(BuildContext context) {
     void _handleCheckBoxState({bool updateState = true}) {
@@ -37,9 +39,10 @@ class _CustomDropDownState extends State<CustomDropDown> {
       child: Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: DropdownSearch<UserModel>(
+        child: DropdownSearch<City>(
           asyncItems: (filter) => getData(filter),
           compareFn: (i, s) => i.isEqual(s),
+
           dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
               hintText: widget.hint!,
@@ -73,7 +76,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   }
 
 
-  Widget _customPopupItemBuilder(BuildContext context, UserModel? item, bool isSelected,) {
+  Widget _customPopupItemBuilder(BuildContext context, City? item, bool isSelected,) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8),
       decoration: !isSelected
@@ -94,18 +97,24 @@ class _CustomDropDownState extends State<CustomDropDown> {
     );
   }
 
-  Future<List<UserModel>> getData(filter) async {
-    var response = await Dio().get(
-      "https://5d85ccfb1e61af001471bf60.mockapi.io/user",
-      queryParameters: {"filter": filter},
-    );
+  Future<List<City>> getData(filter) async {
+    if(cities_list.isEmpty){
+      var response = await Dio().get(
+          baseUrl + getAllCitiesUrl
+      );
 
-    final data = response.data;
-    if (data != null) {
-      return UserModel.fromJsonList(data);
+
+      final data = response.data['data'];
+      if (data != null) {
+        cities_list = City.fromJsonList(data);
+        return City.fromJsonList(data);
+      }
+
+      return [];
+    }else{
+      return cities_list.where((element) => element.name!.contains(filter)).toList();
     }
 
-    return [];
   }
 }
 

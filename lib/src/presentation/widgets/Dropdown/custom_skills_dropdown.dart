@@ -1,4 +1,5 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/SkillsModel/skills_model.dart';
 import 'package:code/src/domain/entities/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -19,7 +20,7 @@ class _CustomSkillsDropdownState extends State<CustomSkillsDropdown> {
 
 
   bool? _popupBuilderSelection = false;
-
+  List<Skills> skills_list = [];
   @override
   Widget build(BuildContext context) {
     void _handleCheckBoxState({bool updateState = true}) {
@@ -38,9 +39,10 @@ class _CustomSkillsDropdownState extends State<CustomSkillsDropdown> {
     return  Form(
           key: _formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: DropdownSearch<UserModel>.multiSelection(
+          child: DropdownSearch<Skills>.multiSelection(
             asyncItems: (filter) => getData(filter),
             compareFn: (i, s) => i.isEqual(s),
+
             dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 hintText: widget.hint!,
@@ -66,11 +68,20 @@ class _CustomSkillsDropdownState extends State<CustomSkillsDropdown> {
               itemBuilder: _customPopupItemBuilder,
 
             ),
+            onChanged: (item){
+              List<String> data = [];
+              item.forEach((element) {
+                data.add(element.id.toString());
+              });
+              sharedPreferenceManager.writeData(CachingKey.SKILLS_ID, data);
+
+            },
+
           )
         );
   }
 
-  Widget _customPopupItemBuilder(BuildContext context, UserModel? item, bool isSelected,) {
+  Widget _customPopupItemBuilder(BuildContext context, Skills? item, bool isSelected,) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8),
       decoration: !isSelected
@@ -90,7 +101,7 @@ class _CustomSkillsDropdownState extends State<CustomSkillsDropdown> {
     );
   }
 
-  Future<List<UserModel>> getData(filter) async {
+/*  Future<List<Skills>> getData(filter) async {
     var response = await Dio().get(
       "https://5d85ccfb1e61af001471bf60.mockapi.io/user",
       queryParameters: {"filter": filter},
@@ -98,10 +109,30 @@ class _CustomSkillsDropdownState extends State<CustomSkillsDropdown> {
 
     final data = response.data;
     if (data != null) {
-      return UserModel.fromJsonList(data);
+      return Skills.fromJsonList(data);
     }
 
     return [];
+  }*/
+
+  Future<List<Skills>> getData(filter) async {
+    if(skills_list.isEmpty){
+      var response = await Dio().get(
+          baseUrl + getSkillsUrl
+      );
+
+
+      final data = response.data['data'];
+      if (data != null) {
+        skills_list = Skills.fromJsonList(data);
+        return Skills.fromJsonList(data);
+      }
+
+      return [];
+    }else{
+      return skills_list.where((element) => element.name!.contains(filter)).toList();
+    }
+
   }
 }
 

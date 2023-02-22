@@ -25,4 +25,7 @@ class ImageAssets {
   static const String language = "$imagePath/language.png";
   static const String logout = "$imagePath/logout.png";
   static const String share = "$imagePath/share.png";
+  static const String placeholder ="$imagePath/placeholder.png";
+  static const String congratulations = "$imagePath/congratulations.png";
+  static const String error = "$imagePath/error.png";
 }

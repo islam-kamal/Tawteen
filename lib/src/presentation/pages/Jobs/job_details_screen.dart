@@ -1,7 +1,12 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/JobModel/job_details_model.dart';
+import 'package:code/src/presentation/bloc/Jobs_Bloc/get_all_jobs_bloc.dart';
 import 'package:code/src/presentation/pages/Jobs/Apply_Jobs/apply_job_person_info.dart';
 
 class JobDetailsScreen extends StatefulWidget {
+  String? job_id;
+  Widget? screen;
+  JobDetailsScreen({this.job_id,this.screen});
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -10,6 +15,14 @@ class JobDetailsScreen extends StatefulWidget {
 }
 
 class JobDetailsScreenState extends State<JobDetailsScreen> {
+
+  @override
+  void initState() {
+    getAllJobsBloc.add(GetJobDetailsEvent(
+      job_id: widget.job_id
+    ));
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -21,7 +34,7 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
               : TextDirection.ltr,
           child: Scaffold(
           appBar: AppBarWidget.appBarWidget(
-              context: context, icon: true, route: LookForJobScreen()),
+              context: context, icon: true, route: widget.screen),
           backgroundColor: kWhiteColor,
           body:  Container(
                   color: kGreenColor,
@@ -33,56 +46,111 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                           topRight: Radius.circular(Shared.width * 0.08),
                           topLeft: Radius.circular(Shared.width * 0.08)),
                     ),
-                    child: SingleChildScrollView(
-                      child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Shared.width * 0.08,
-                              vertical: Shared.width * 0.05),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Shared.width * 0.03),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "مطلوب مصمم خبرة 5 سنوات",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: Shared.width * 0.05,
-                              ),
-                              SizedBox(
-                                //  height: Shared.height * 0.8,
-                                  child: Padding(
-                                      padding: EdgeInsets.only(
-                                        bottom: Shared.width * 0.1,
+                    child: BlocBuilder(
+                      bloc: getAllJobsBloc,
+                      builder: (context,state){
+                        if(state is Loading){
+                          return Padding(
+                            padding: EdgeInsets.only(top: Shared.width * 0.4, ),
+                            child: Center(
+                                child: Shared.spinkit
+                            ),
+                          );
+                        }else if(state is Done){
+                          return StreamBuilder<JobDetailsModel>(
+                              stream: getAllJobsBloc.job_details_subject,
+                              builder: (context,snapshot){
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                    return Padding(
+                                      padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                      child: Center(
+                                          child: Shared.spinkit
                                       ),
-                                      child: Column(
-                                        children: [
-                                          job_details_header(),
-                                          job_details_body(),
-                                          Padding(
-                                              padding: EdgeInsets.symmetric(vertical: Shared.width * 0.05),
-                                              child: CustomButtonWidget(
-                                                button_text: kapplyjob.tr(),
-                                                width: Shared.width ,
-                                                height: Shared.width * 0.13,
-                                                onPress: () {
-                                                  customAnimatedPushNavigation(
-                                                      context, ApplyJobPersonInfo());
-                                                },
-                                              )),
-                                        ],
-                                      ))),
-                            ],
-                          )),
+                                    );
+                                  case ConnectionState.done:
+                                    return Text('');
+                                  case ConnectionState.waiting:
+                                    return Padding(
+                                      padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                      child: Center(
+                                          child: Shared.spinkit
+                                      ),
+                                    );
+                                  case ConnectionState.active:
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text(snapshot.error.toString()),
+                                      );
+                                    }
+                                    else  {
+                                      return   SingleChildScrollView(
+                                        child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: Shared.width * 0.08,
+                                                vertical: Shared.width * 0.05),
+                                            child: Column(
+                                              children: [
+                                            /*    Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: Shared.width * 0.03),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "مطلوب مصمم خبرة 5 سنوات",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),*/
+                                                SizedBox(
+                                                  height: Shared.width * 0.05,
+                                                ),
+                                                SizedBox(
+                                                  //  height: Shared.height * 0.8,
+                                                    child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                          bottom: Shared.width * 0.1,
+                                                        ),
+                                                        child: Column(
+                                                          children: [
+                                                            job_details_header(
+                                                              jobDetails: snapshot.data!.data
+                                                            ),
+                                                            job_details_body(
+                                                                jobDetails: snapshot.data!.data
+                                                            ),
+                                                            Padding(
+                                                                padding: EdgeInsets.symmetric(vertical: Shared.width * 0.05),
+                                                                child: CustomButtonWidget(
+                                                                  button_text: kapplyjob.tr(),
+                                                                  width: Shared.width ,
+                                                                  height: Shared.width * 0.13,
+                                                                  onPress: () {
+                                                                    customAnimatedPushNavigation(
+                                                                        context, ApplyJobPersonInfo());
+                                                                  },
+                                                                )),
+                                                          ],
+                                                        ))),
+                                              ],
+                                            )),
+                                      );
+                                    }
+
+                                }
+                              });
+
+                        }else if(state is ErrorLoading){
+                          return no_data_widget(context: context);
+                        }
+                        return Container();
+                      },
                     )
+
+
                   )),
 
           ),
@@ -91,7 +159,7 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
     );
   }
 
-  Widget job_details_header() {
+  Widget job_details_header({JobDetails? jobDetails}) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Shared.width * 0.02),
@@ -105,7 +173,19 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                   padding: EdgeInsets.symmetric(
                       vertical: Shared.width * 0.01,
                       horizontal: Shared.width * 0.02),
-                  child: Image.asset(ImageAssets.company1))),
+                  child: /*FadeInImage(
+                    image: NetworkImage(baseUrl + courseDetails!.attachments!.firstWhere((element) => element.status ==1).filePath!),
+                    placeholder: AssetImage(ImageAssets.placeholder),
+                    imageErrorBuilder:
+                        (context, error, stackTrace) {
+                      return Image.asset(
+                          ImageAssets.placeholder,
+                          fit: BoxFit.cover);
+                    },
+                    fit: BoxFit.cover,
+                  )*/
+                  Image.asset(ImageAssets.company1)
+              )),
           Expanded(
               flex: 3,
               child: Padding(
@@ -117,7 +197,7 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                         vertical: Shared.width * 0.02,
                       ),
                       child: Text(
-                        "مطلوب مصمم خبرة 5 سنوات",
+                        "${jobDetails!.jobTitleName}",
                         style: TextStyle(
                             fontSize: Shared.width * 0.04,
                             fontWeight: FontWeight.bold,
@@ -128,32 +208,33 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
     );
   }
 
-  Widget job_details_body() {
+  Widget job_details_body({JobDetails? jobDetails}) {
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Shared.width * 0.02),
             border: Border.all(color: kInactiveColor)),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.05),
+          padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.05,
+          vertical: Shared.width * 0.02),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                   padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
-                  child: Text("الوصف الوظيفي",
+                  child: Text(kjobdescription.tr(),
                       style: TextStyle(
                         color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 17))),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
                   child: Text(
-                      "مطلوب مصمم سعودي تعمل عن بعد لتنفيذ تصاميم دعائية وترويجية لمنتجات الشركة على منصات التواصل الاجتماعي تويتر , سناب شاب , تيك توك . انستجرام , واى منصات تواصل اخرى إن وجد ) يشترط تواجدها بالرياض خبرة لاتقل عن 3 سنوات لن يتم النظر في اى متقدم لاتتوفر في الشروط باقي البنود يتفق عليها في المقابلة",
+                      "${jobDetails!.jobDescription}",
                       style: TextStyle(
                           //fontWeight: FontWeight.bold,
                           fontSize: 13))),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
-                  child: Text("البرامج المطلوب العمل عليها",
+                  child: Text(kProgramstoworkon.tr(),
                       style: TextStyle(
                           color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 17))),
@@ -173,13 +254,13 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                           child: Row(
                         children: [
                           Text(
-                            "تاريخ النشر : ",
+                            "${kpublishdate.tr()} : ",
                             style: TextStyle(
                                 fontSize: Shared.width * 0.03,
                                 color: kGreyColor),
                           ),
                           Text(
-                            "26/1/2023",
+                            "${jobDetails!.publishStartDate}",
                             style: TextStyle(
                                 fontSize: Shared.width * 0.03,
                                 color: kGreyColor),
@@ -190,13 +271,13 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                           child: Row(
                         children: [
                           Text(
-                            "تاريخ الانتهاء : ",
+                            "${kexpiredate.tr()} : ",
                             style: TextStyle(
                                 fontSize: Shared.width * 0.03,
                                 color: kGreyColor),
                           ),
                           Text(
-                            "26/1/2023",
+                            "${jobDetails.publishEndDate}",
                             style: TextStyle(
                                 fontSize: Shared.width * 0.03,
                                 color: kGreyColor),

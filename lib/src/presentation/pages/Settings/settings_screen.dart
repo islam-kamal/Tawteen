@@ -1,5 +1,4 @@
 import 'package:code/src/Base/common/file_export.dart';
-import 'package:code/src/Base/common/preference_manager.dart';
 import 'package:code/src/presentation/pages/Settings/privacy_screen.dart';
 import 'package:code/src/presentation/pages/Settings/terms_screen.dart';
 import 'package:code/src/presentation/widgets/contact_us_dialog.dart';
@@ -283,6 +282,6 @@ class SettingsScreenState extends State<SettingsScreen> {
       );
     });
     MyMaterial.setLocale(context, Locale('${lang}'));
-    PreferenceManager.getInstance()!.saveString(Shared.languageCode, lang!);
+    sharedPreferenceManager.writeData(CachingKey.APP_LANGUAGE, lang!);
   }
 }

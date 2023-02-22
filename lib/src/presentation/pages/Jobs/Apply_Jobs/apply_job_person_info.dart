@@ -1,5 +1,6 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/pages/Jobs/Apply_Jobs/apply_job_attachments.dart';
+import 'package:code/src/presentation/widgets/Dropdown/custom_province_dropdown.dart';
 
 class ApplyJobPersonInfo extends StatefulWidget{
   @override
@@ -126,8 +127,8 @@ class ApplyJobPersonInfoState extends State<ApplyJobPersonInfo>{
                                         text: kcity.tr(),
                                         textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                                   ),
-                                  CustomDropDown(
-                                    hint: "الرياض",
+                                  CustomProvinceDropDown(
+                                    hint: kcity.tr(),
                                   ),
                                   Padding(
                                       padding: EdgeInsets.symmetric(vertical: Shared.width * 0.1),

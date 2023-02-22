@@ -1,5 +1,8 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/JobModel/all_jobs_model.dart';
 import 'package:code/src/domain/entities/search_result_entity.dart';
+import 'package:code/src/presentation/bloc/Jobs_Bloc/search_jobs_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class JobsSearchResultsScreen extends StatefulWidget {
   @override
@@ -10,51 +13,19 @@ class JobsSearchResultsScreen extends StatefulWidget {
 }
 
 class JobsSearchResultsScreenState extends State<JobsSearchResultsScreen> {
-  List<JobEntity?> search_results_list = [
-    JobEntity(
-      image: ImageAssets.company1,
-      title: "مصمم جرافيك خبرة 5 سنوات",
-      publish_date: "26/1/2023",
-      end_date: "26/2/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company2,
-      title: "مصمم جرافيك",
-      publish_date: "26/1/2023",
-      end_date: "26/2/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company3,
-      title: "Graphic Designer",
-      publish_date: "26/1/2023",
-      end_date: "26/2/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company4,
-      title: "Senior Graphic Designer",
-      publish_date: "6/5/2023",
-      end_date: "26/9/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company5,
-      title: "مصمم جرافيك خبرة 5 سنوات",
-      publish_date: "26/3/2023",
-      end_date: "2/4/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company5,
-      title: "مصمم جرافيك خبرة 5 سنوات",
-      publish_date: "26/3/2023",
-      end_date: "2/4/2023",
-    ),
-    JobEntity(
-      image: ImageAssets.company5,
-      title: "مصمم جرافيك خبرة 5 سنوات",
-      publish_date: "26/3/2023",
-      end_date: "2/4/2023",
-    ),
-  ];
 
+  Future<String> getJobTitleName() async {
+    return translator.activeLanguageCode =='ar'? await sharedPreferenceManager.readString(CachingKey.JOB_TITLE_NAME_AR)
+        : await sharedPreferenceManager.readString(CachingKey.JOB_TITLE_NAME_EN);
+  }
+  String? jobTitleName;
+  @override
+  void initState() {
+    getJobTitleName().then((value){
+      jobTitleName = value;
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return NetworkIndicator(
@@ -63,77 +34,138 @@ class JobsSearchResultsScreenState extends State<JobsSearchResultsScreen> {
             textDirection: translator.activeLanguageCode == 'ar'
                 ? TextDirection.rtl
                 : TextDirection.ltr,
-            child:Scaffold(
-          appBar: AppBarWidget.appBarWidget(
-              context: context, icon: true, route: LookForJobScreen()),
-          backgroundColor: kWhiteColor,
-          body: Container(
-                color: kGreenColor,
-                child:Container(
-                  height: Shared.height,
-                  padding: EdgeInsets.only(top: 10),
-                  decoration: BoxDecoration(
-                    color: kWhiteColor,
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(Shared.width * 0.08),
-                        topLeft: Radius.circular(Shared.width * 0.08)),
-                  ),
-                  child: SingleChildScrollView(
-    child:Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: Shared.width * 0.05,
-                          vertical: Shared.width * 0.05),
-                      child:  Column(
-                          children: [
-                            Padding(padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.06,
-                              vertical: Shared.width * 0.02, ),
-                              child: Row(
-                                children: [
-                                  Text(ksearchresults.tr(),style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)
-                                ],
-                              ),),
-
-                         Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: Shared.width * 0.1,
-                                  ),
-                                  child:ListView.builder(
-                                      itemCount: search_results_list.length,
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: Shared.width * 0.02,
-                                              horizontal: Shared.width * 0.04),
-                                          child: job_search_result_element(
-                                              searchResultEntity:
-                                              search_results_list[index]),
-                                        );
-                                      }),
-                                )   ,
-
-                          ],
-                        ),
+            child: Scaffold(
+              appBar: AppBarWidget.appBarWidget(
+                  context: context, icon: true, route: LookForJobScreen()),
+              backgroundColor: kWhiteColor,
+              body: Container(
+                  color: kGreenColor,
+                  child: Container(
+                      height: Shared.height,
+                      padding: EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                        color: kWhiteColor,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(Shared.width * 0.08),
+                            topLeft: Radius.circular(Shared.width * 0.08)),
                       ),
-                )
-            )
-          ),
-          )   ),
+                      child: BlocBuilder(
+                        bloc: search_jobs_bloc,
+                        builder: (context,state){
+                          if(state is Loading){
+                            return Padding(
+                              padding: EdgeInsets.only(top: Shared.width * 0.4, ),
+                              child: Center(
+                                child: Shared.spinkit
+                              ),
+                            );
+                          }else if(state is Done){
+                            return StreamBuilder<AllJobsModel>(
+                                stream: search_jobs_bloc.search_jobs_subject,
+                                builder: (context,snapshot){
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                      return Padding(
+                                        padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                        child: Center(
+                                          child: Shared.spinkit
+                                        ),
+                                      );
+                                    case ConnectionState.done:
+                                      return Text('');
+                                    case ConnectionState.waiting:
+                                      return Padding(
+                                        padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                        child: Center(
+                                          child: Shared.spinkit
+                                        ),
+                                      );
+                                    case ConnectionState.active:
+                                      if (snapshot.hasError) {
+                                        return Center(
+                                          child: Text(snapshot.error.toString()),
+                                        );
+                                      }
+                                      else if (snapshot.data!.data!.length > 0) {
+                                        return   SingleChildScrollView(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: Shared.width * 0.05,
+                                                vertical: Shared.width * 0.05),
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: Shared.width * 0.06,
+                                                    vertical: Shared.width * 0.02,
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        ksearchresults.tr() + jobTitleName.toString(),
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    bottom: Shared.width * 0.1,
+                                                  ),
+                                                  child: ListView.builder(
+                                                      itemCount: snapshot.data!.data!.length,
+                                                      shrinkWrap: true,
+                                                      physics: NeverScrollableScrollPhysics(),
+                                                      itemBuilder: (context, index) {
+                                                        return Padding(
+                                                          padding: EdgeInsets.symmetric(
+                                                              vertical: Shared.width * 0.02,
+                                                              horizontal: Shared.width * 0.04),
+                                                          child: job_search_result_element(
+                                                              searchedJob: snapshot.data!.data![index]),
+                                                        );
+                                                      }),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      else
+                                        return no_data_widget(context: context);
+                                  }
+                                });
+
+                          }else if(state is ErrorLoading){
+                            return no_data_widget(context: context);
+                          }
+                          return Container();
+                        },
+                      )
+
+
+                  )
+              ),
+            )),
       ),
     );
   }
 
-  Widget job_search_result_element({JobEntity? searchResultEntity}) {
+  Widget job_search_result_element({SearchedJob? searchedJob}) {
     return InkWell(
       onTap: () {
-        customAnimatedPushNavigation(context, JobDetailsScreen());
+        customAnimatedPushNavigation(context, JobDetailsScreen(
+          job_id: searchedJob!.id,
+          screen: JobsSearchResultsScreen(),
+        ));
       },
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Shared.width * 0.02),
             border: Border.all(color: kInactiveColor)),
-        padding: EdgeInsets.symmetric(vertical:Shared.width * 0.02 ),
+        padding: EdgeInsets.symmetric(vertical: Shared.width * 0.02),
         child: Row(
           children: [
             Expanded(
@@ -142,7 +174,17 @@ class JobsSearchResultsScreenState extends State<JobsSearchResultsScreen> {
                     padding: EdgeInsets.symmetric(
                         vertical: Shared.width * 0.01,
                         horizontal: Shared.width * 0.02),
-                    child: Image.asset(searchResultEntity!.image!))),
+                    child: FadeInImage(
+                      image: NetworkImage(baseUrl + searchedJob!.attachments!.firstWhere((element) => element.status ==1).filePath!),
+                      placeholder: AssetImage(ImageAssets.placeholder),
+                      imageErrorBuilder:
+                          (context, error, stackTrace) {
+                        return Image.asset(
+                            ImageAssets.placeholder,
+                            fit: BoxFit.cover);
+                      },
+                      fit: BoxFit.cover,
+                    ))),
             Expanded(
                 flex: 4,
                 child: Padding(
@@ -153,16 +195,17 @@ class JobsSearchResultsScreenState extends State<JobsSearchResultsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                    Padding(
-                    padding: EdgeInsets.symmetric(
-                    vertical: Shared.width * 0.02,),
-                  child: Text(
-                          searchResultEntity.title!,
-                          style: TextStyle(
-                              fontSize: Shared.width * 0.04,
-                              fontWeight: FontWeight.bold,
-                              color: kBlackColor),
-                  )  ),
+                        Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Shared.width * 0.02,
+                            ),
+                            child: Text(
+                              searchedJob.jobTitleName!,
+                              style: TextStyle(
+                                  fontSize: Shared.width * 0.04,
+                                  fontWeight: FontWeight.bold,
+                                  color: kBlackColor),
+                            )),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -176,7 +219,7 @@ class JobsSearchResultsScreenState extends State<JobsSearchResultsScreen> {
                                       color: kGreyColor),
                                 ),
                                 Text(
-                                  searchResultEntity.publish_date!,
+                                  searchedJob.publishStartDate!,
                                   style: TextStyle(
                                       fontSize: Shared.width * 0.03,
                                       color: kGreyColor),
@@ -193,7 +236,7 @@ class JobsSearchResultsScreenState extends State<JobsSearchResultsScreen> {
                                       color: kGreyColor),
                                 ),
                                 Text(
-                                  searchResultEntity.end_date!,
+                                  searchedJob.publishEndDate!,
                                   style: TextStyle(
                                       fontSize: Shared.width * 0.03,
                                       color: kGreyColor),
