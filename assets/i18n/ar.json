@@ -86,6 +86,7 @@
   "set" : "تحديد",
   "start_date" : "تاريخ البداية",
   "end_date" : "تاريخ الانتهاء",
-  "description" : "الوصف"
+  "description" : "الوصف",
+  "addexperience" : "اضافة خبرة"
 
 }

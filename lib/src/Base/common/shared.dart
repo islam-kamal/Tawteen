@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:code/src/domain/entities/experience_entity.dart';
 import 'package:get/get.dart';
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/Base/common/theme.dart';
@@ -58,16 +59,18 @@ class Shared {
     );
   }
 
+  static Widget text_widget ({String? text,TextStyle?textStyle}){
+    return Row(
+      children: [
+        Text("$text",style: textStyle,)
+      ],
+    );
+  }
+
   static double width = ScreenUtil.defaultSize.width;
   static double height = ScreenUtil.defaultSize.height;
   static const token = "Token";
   static const languageCode = "language_code";
+  static List<ExperienceEntity> user_experinces = [];
 
-  static Widget text_widget ({String? text,TextStyle?textStyle}){
-    return Row(
-        children: [
-          Text("$text",style: textStyle,)
-        ],
-      );
-  }
 }

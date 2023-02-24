@@ -68,6 +68,9 @@ dependencies:
   get:
   webview_flutter: 2.0.13
   scroll_date_picker: ^3.6.1
+  path:
+  convert:
+  file_picker: ^5.2.5
 
 dev_dependencies:
   flutter_test:

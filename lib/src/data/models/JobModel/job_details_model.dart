@@ -40,6 +40,7 @@ class JobDetailsModel extends BaseMappable{
 
   @override
   Mappable fromJson(Map<String, dynamic> json) {
+    print("json : ${json}");
     httpStatusCode = json['httpStatusCode'];
     succeeded = json['succeeded'];
     message = json['message'];
@@ -74,8 +75,8 @@ class JobDetails {
   String? salaryRangeName;
   String? createBy;
   String? creationDate;
-  Null? modifiedBy;
-  Null? lastUpdateDate;
+  String? modifiedBy;
+  String? lastUpdateDate;
   int? status;
   int? applicantCount;
   List<JobSkillResultList>? jobSkillResultList;

@@ -29,7 +29,7 @@ SharedPreferenceManager sharedPreferenceManager =SharedPreferenceManager();
           contentType: 'application/json',
         )
       );
-      print("get response : ${response}");
+    //  print("get response : ${response}");
     } on DioError catch (e) {
       print("get error : ${e}");
       if (e.response != null) {

@@ -86,5 +86,6 @@
   "set" : "Set",
   "start_date" : "Start Date",
   "end_date" : "End Date",
-  "description" : "Description"
+  "description" : "Description",
+  "addexperience" : "Add Experience"
 }

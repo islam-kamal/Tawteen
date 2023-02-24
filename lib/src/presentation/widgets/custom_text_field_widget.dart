@@ -29,7 +29,6 @@ class CustomTextField extends StatefulWidget {
   bool? isQuantity;
   TextDirection? direction;
   GlobalKey<FormState>? formKey;
-  Function? onFieldSubmitted;
   bool? isProfile;
   bool? isValidator;
 
@@ -59,7 +58,6 @@ class CustomTextField extends StatefulWidget {
         this.direction,
         this.identity= false,
         this.hint,
-        this.onFieldSubmitted,
         this.isProfile});
 
   @override
@@ -125,9 +123,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
         widget.formKey!.currentState!.validate();
       },
 
-      onFieldSubmitted: (value) {
-        widget.onFieldSubmitted!();
-      },
       focusNode: widget.focusNode,
       autofocus: false,
       obscureText: (widget.hasPassword) ? showPassword : widget.hasPassword,

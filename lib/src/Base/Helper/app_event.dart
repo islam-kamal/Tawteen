@@ -2,6 +2,7 @@
 
 
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/domain/entities/experience_entity.dart';
 
 abstract class AppEvent {}
 
@@ -62,6 +63,11 @@ class SearchJobsEvent extends AppEvent{
   SearchJobsEvent({this.searchSpecficJobsEntity});
 }
 
+//EXPERIENCE
+class AddExperienceEvent extends AppEvent{
+  List<ExperienceEntity>? experienceEntity;
+  AddExperienceEvent({this.experienceEntity});
+}
 
 //JOBS
 class GetAllJobsEvent extends AppEvent{
@@ -75,6 +81,10 @@ class GetJobDetailsEvent extends AppEvent{
   GetJobDetailsEvent({this.job_id});
 }
 
+class ApplyJobEvent extends AppEvent{
+
+}
+
 //COURSES
 class GetAllCoursesEvent extends AppEvent{
   BuildContext? context;
@@ -86,6 +96,17 @@ class GetCourseDetailsEvent extends AppEvent{
   CourseEntity? course;
 
   GetCourseDetailsEvent({this.course});
+}
+
+//ATTACHMENTS
+class GetAllAttachmentsEvent extends AppEvent{
+  String? applicationId;
+  String? applicationTypeId;
+  GetAllAttachmentsEvent({this.applicationId,this.applicationTypeId});
+}
+class DeleteAttachmentEvent extends AppEvent{
+  String? attachmentId ;
+  DeleteAttachmentEvent({this.attachmentId});
 }
 
 

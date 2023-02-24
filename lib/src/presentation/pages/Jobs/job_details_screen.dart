@@ -21,6 +21,7 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
     getAllJobsBloc.add(GetJobDetailsEvent(
       job_id: widget.job_id
     ));
+    sharedPreferenceManager.writeData(CachingKey.JOB_ID, widget.job_id);
     super.initState();
   }
   @override
@@ -234,17 +235,22 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                           fontSize: 13))),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
-                  child: Text(kProgramstoworkon.tr(),
+                  child: Text(kskills.tr(),
                       style: TextStyle(
                           color: kGreenColor,
                           fontWeight: FontWeight.bold, fontSize: 17))),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: Shared.width * 0.01),
-                  child: Text(
-                      "Adobe Photoshop \nAdobe After Effects \nCinema 4D- Maxon",
-                      style: TextStyle(
-                          //fontWeight: FontWeight.bold,
-                          fontSize: 13))),
+                  child:     ListView.builder(
+                      itemCount: jobDetails.jobSkillResultList!.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context,index){
+                        return Text("${index+1} - ${jobDetails.jobSkillResultList![index].skillName}",
+                            style: TextStyle(
+                              //fontWeight: FontWeight.bold,
+                                fontSize: 15));
+                      }),),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: Shared.width * 0.05),
                   child: Row(
@@ -260,7 +266,7 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                                 color: kGreyColor),
                           ),
                           Text(
-                            "${jobDetails!.publishStartDate}",
+                            "${jobDetails.publishStartDate}",
                             style: TextStyle(
                                 fontSize: Shared.width * 0.03,
                                 color: kGreyColor),

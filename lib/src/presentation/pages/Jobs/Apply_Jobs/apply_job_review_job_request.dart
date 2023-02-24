@@ -1,11 +1,29 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/AttachmentsModel/attachment_model.dart';
+import 'package:code/src/presentation/bloc/Attachment_Bloc/attachment_bloc.dart';
+import 'package:code/src/presentation/bloc/Jobs_Bloc/apply_job_bloc.dart';
 import 'package:code/src/presentation/pages/Profile/personal_info_widget.dart';
 import 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
 import 'package:provider/provider.dart';
 
+class ReviewJobRequestWidget extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return ReviewJobRequestWidgetState();
+  }
 
-class ReviewJobRequestWidget extends StatelessWidget {
+}
+class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
 
+  @override
+  void initState() {
+    attachments_bloc.add(GetAllAttachmentsEvent(
+        applicationId: "21",
+        applicationTypeId: "3"
+    ));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +39,30 @@ class ReviewJobRequestWidget extends StatelessWidget {
                 icon: false
             ),
             backgroundColor: kWhiteColor,
-            body:  Container(
+            body: BlocListener(
+            bloc: apply_job_bloc,
+            listener: (context, state) {
+            if(state is Loading){
+            print("Loading");
+            Shared.showLoadingDialog(context: context);
+            }else if(state is Done){
+            print("Done");
+            Shared.dismissDialog(context: context);
+
+            customAnimatedPushNavigation(context, ThanksScreen());
+
+            }else if(state is ErrorLoading){
+            print("ErrorLoading : ${ state.message}");
+            Shared.dismissDialog(context: context);
+            Shared.showSnackBarView(
+            title_status: false,
+            backend_message:  state.message,
+            backgroundColor: kRedColor,
+            success_icon: false
+            );
+            }
+            },
+            child:  Container(
                 color: kGreenColor,
                 child:Container(
                   height: Shared.height,
@@ -45,7 +86,8 @@ class ReviewJobRequestWidget extends StatelessWidget {
                                     isApplyJobReviewRequest: true),
                               ),
 
-                           Padding(padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.06),
+                           Padding(
+                             padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.06),
                            child: Column(
                              children: [
                                Padding(
@@ -116,20 +158,69 @@ class ReviewJobRequestWidget extends StatelessWidget {
                                      text: kattachments.tr(),
                                      textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                                ),
-                               Container(
-                                 width: Shared.width ,
-                                 child:  ListView.builder(
-                                     itemCount: 3,
-                                     shrinkWrap: true,
-                                     itemBuilder: (context, index){
 
-                                       return Padding(padding: EdgeInsets.symmetric(vertical: 5),
-                                         child:  attachment(
+                               BlocBuilder(
+                                 bloc: attachments_bloc,
+                                 builder: (context,state){
+                                   if(state is Loading){
+                                     return Padding(
+                                       padding: EdgeInsets.only(top: Shared.width * 0.1, ),
+                                       child: Center(
+                                           child: Shared.spinkit
+                                       ),
+                                     );
+                                   }else if(state is Done){
+                                     return StreamBuilder<AttachmentModel>(
+                                         stream: attachments_bloc.all_attachments_subject,
+                                         builder: (context,snapshot){
 
-                                         ),);
-                                     }),
+                                           switch (snapshot.connectionState) {
+                                             case ConnectionState.none:
+                                               return Padding(
+                                                 padding: EdgeInsets.only(top:Shared.width * 0.1, ),
+                                                 child: Center(
+                                                     child: Shared.spinkit
+                                                 ),
+                                               );
+                                             case ConnectionState.done:
+                                               return Text('');
+                                             case ConnectionState.waiting:
+                                               return Padding(
+                                                 padding: EdgeInsets.only(top:Shared.width * 0.1, ),
+                                                 child: Center(
+                                                     child: Shared.spinkit
+                                                 ),
+                                               );
+                                             case ConnectionState.active:
+                                               if (snapshot.hasError) {
+                                                 return Center(
+                                                   child: Text(snapshot.error.toString()),
+                                                 );
+                                               }
+                                               else  {
+                                                 return    Container(
+                                                   width: Shared.width,
+                                                   child: ListView.builder(
+                                                       itemCount: snapshot.data!.data!.length,
+                                                       shrinkWrap: true,
+                                                       physics: NeverScrollableScrollPhysics(),
+                                                       itemBuilder: (context, index) {
+                                                         return attachment(
+                                                           title:  snapshot.data!.data![index].title
+                                                         );
+                                                       }),
+                                                 );
+                                               }
+
+                                           }
+                                         });
+
+                                   }else if(state is ErrorLoading){
+                                     return no_data_widget(context: context);
+                                   }
+                                   return Container();
+                                 },
                                ),
-
                                Padding(
                                    padding: EdgeInsets.symmetric(vertical: Shared.width * 0.1),
                                    child: CustomButtonWidget(
@@ -137,8 +228,7 @@ class ReviewJobRequestWidget extends StatelessWidget {
                                      width: Shared.width,
                                      height: Shared.width * 0.13,
                                      onPress: () {
-                                     customAnimatedPushNavigation(context, ThanksScreen());
-
+                                       apply_job_bloc.add(ApplyJobEvent());
                                      },
                                    )),
                              ],
@@ -152,11 +242,11 @@ class ReviewJobRequestWidget extends StatelessWidget {
 
         ),
       ),
-    );
+      )   );
 
   }
 
-  Widget attachment(){
+  Widget attachment({String? title}){
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -167,7 +257,7 @@ class ReviewJobRequestWidget extends StatelessWidget {
           children: [
             Icon(Icons.attach_file,color: kBlackColor,),
             Padding(padding: EdgeInsets.symmetric(horizontal: 5),
-            child: Text("certificate.pdf"),)
+            child: Text("${title}"),)
           ],
         )
     );

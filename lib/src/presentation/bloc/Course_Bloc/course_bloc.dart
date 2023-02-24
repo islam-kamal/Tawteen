@@ -34,7 +34,7 @@ class CourseBloc extends Bloc<AppEvent,AppState>{
         _all_courses_subject.sink.add(response);
         emit( Done(model: response));
       }else{
-        emit( ErrorLoading(model: response));
+        emit( ErrorLoading(message: response.message));
       }
 
     } catch (e) {
@@ -55,7 +55,7 @@ class CourseBloc extends Bloc<AppEvent,AppState>{
         _course_details_subject.sink.add(response);
         emit( Done(model: response));
       }else{
-        emit( ErrorLoading(model: response));
+        emit( ErrorLoading(message: response.message));
       }
 
     } catch (e) {

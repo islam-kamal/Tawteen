@@ -58,9 +58,11 @@ class GetAllJobsBloc extends Bloc<AppEvent, AppState> {
         _job_details_subject.sink.add(response);
         emit(Done(model: response));
       } else {
+
         emit(ErrorLoading(model: response));
       }
     } catch (e) {
+      print("e : ${e.toString()}");
       emit(
         ErrorLoading(
           message: "Failed to fetch data. Is your device online ?",

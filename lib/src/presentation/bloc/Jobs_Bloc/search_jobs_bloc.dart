@@ -34,7 +34,7 @@ class SearchJobsBloc extends Bloc<AppEvent,AppState> {
 
         emit( Done(model: response));
       }else{
-        emit( ErrorLoading(model: response));
+        emit( ErrorLoading(message: response.message));
       }
 
     } catch (e) {

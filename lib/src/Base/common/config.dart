@@ -10,3 +10,5 @@ const String getAllCoursesUrl = "api/v1/courses/all?status=1";
 const String getEductionalLevelUrl = "api/v1/lookup/education-levels";
 const String getEductionMajorUrl = "api/v1/lookup/education-majors";
 const String getSkillsUrl = "api/v1/lookup/skills";
+const String uploadAttachmentsUrl = "api/v1/attachments";
+const String applyJobUrl = "api/v1/applicant-jobs";
