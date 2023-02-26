@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:code/src/domain/entities/experience_entity.dart';
+import 'package:code/src/domain/entities/nafath_info_entity.dart';
 import 'package:get/get.dart';
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/Base/common/theme.dart';
@@ -39,7 +40,7 @@ class Shared {
 
   static void showSnackBarView({bool? title_status, String? message, String? backend_message,
     Color? backgroundColor, bool? success_icon}) {
-    Get.snackbar(
+/*    Get.snackbar(
         translator.translate(title_status! ? kcongratulations: kfault ),
         backend_message?? translator.translate(message!),
         colorText: Colors.white,
@@ -55,8 +56,12 @@ class Shared {
           width: 30,
           height: 30,
           color: kWhiteColor,
-        )
-    );
+        ),
+    );*/
+    var snackBar = SnackBar(
+        content: Text( backend_message?? translator.translate(message!)));
+    // Step 3
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(snackBar);
   }
 
   static Widget text_widget ({String? text,TextStyle?textStyle}){
@@ -72,5 +77,7 @@ class Shared {
   static const token = "Token";
   static const languageCode = "language_code";
   static List<ExperienceEntity> user_experinces = [];
+  static List<String> applicant_skills = [];
+  static NafathInfoEntity? nafathInfoEntity ;
 
 }

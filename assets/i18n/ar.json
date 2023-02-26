@@ -87,6 +87,18 @@
   "start_date" : "تاريخ البداية",
   "end_date" : "تاريخ الانتهاء",
   "description" : "الوصف",
-  "addexperience" : "اضافة خبرة"
-
+  "addexperience" : "اضافة خبرة",
+  "active" : "مفعل",
+  "deleted" :  "تم الحذف",
+  "underVerified" : "ضمن التحقق",
+  "suspended" : "معلق",
+  "rejected" :  "مرفوض",
+  "cancelled" :  "تم الغاء",
+  "accepted" : "مقبول",
+  "pending" :  "قيد الانتظار",
+  "all" :  "الكل",
+  "underProcessing" :  "قيد المعالجة",
+  "male" : "ذكر",
+  "female" : "انثى",
+  "Enter_email_correctly" : "قم بادخال البريد الالكترونى بطريقة صحيحة"
 }

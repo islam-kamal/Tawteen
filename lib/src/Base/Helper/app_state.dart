@@ -1,6 +1,7 @@
 
 
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/NafathModel/nafath_rquest_model.dart';
 
 abstract class AppState {
   get model =>null;
@@ -21,30 +22,6 @@ class Loading extends AppState{
     // TODO: implement toString
   }
 }
-class ProductLoading extends AppState{
-  final String? indicator;
-  final String? sku;
-  Mappable? model;
-  ProductLoading( {this.sku='',this.model , this.indicator});
-
-  @override
-  String toString() {
-    return indicator!;
-
-  }
-}
-class WishListToCartLoading extends AppState{
-  final String? indicator;
-  final String? id;
-  Mappable? model;
-  WishListToCartLoading( {this.id='',this.model , this.indicator});
-
-  @override
-  String toString() {
-    return indicator!;
-
-  }
-}
 class Done extends AppState{
   Mappable? model;
   final String? indicator;
@@ -60,29 +37,11 @@ class Done extends AppState{
   }
 
 }
-class DoneProductAdded extends AppState{
-  Mappable? model;
+class SendNafthRequestDone extends AppState{
+   NafathRequestModel? model;
   final String? indicator;
-  List<dynamic>? general_model;
-  final String? sku;
-  var general_value;
-  DoneProductAdded({this.sku='',this.model , this.indicator,this.general_model, this.general_value});
-
-  @override
-  String toString() {
-    return sku!;
-
-    // TODO: implement toString
-  }
-
-}
-class DoneWishListToCartAdded extends AppState{
-  Mappable? model;
-  final String? indicator;
-  List<dynamic>? general_model;
-  final String? id;
-  var general_value;
-  DoneWishListToCartAdded({this.id='',this.model , this.indicator,this.general_model, this.general_value});
+   final String? nationalId;
+  SendNafthRequestDone({this.model , this.indicator,this.nationalId});
 
   @override
   String toString() {
@@ -92,7 +51,6 @@ class DoneWishListToCartAdded extends AppState{
   }
 
 }
-
 class ErrorLoading extends AppState{
   Mappable? model;
   List<dynamic>? general_model;

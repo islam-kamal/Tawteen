@@ -42,9 +42,14 @@ class SharedPreferenceManager {
   Future<String> readString(CachingKey key) async {
     sharedPreferences = await SharedPreferences.getInstance();
 
-    return Future.value(sharedPreferences!.getString(key.value) ?? "");
+    return Future.value(sharedPreferences!.getString(key.value).toString() ?? "");
   }
 
+  Future<int> readInt(CachingKey key) async {
+    sharedPreferences = await SharedPreferences.getInstance();
+
+    return Future.value(sharedPreferences!.getInt(key.value));
+  }
 }
 
 class NotValidCacheTypeException implements Exception {
@@ -83,11 +88,33 @@ class CachingKey extends Enum<String> {
 
   static const CachingKey EMAIL = const CachingKey('EMAIL');
   static const CachingKey MOBILE_NUMBER = const CachingKey('MOBILE_NUMBER');
-  static const CachingKey USER_COUNTRY_CODE = const CachingKey('USER_COUNTRY_CODE');
 
-  static const CachingKey FIREBASE_TOKEN = const CachingKey('FIREBASE_TOKEN');
-  static const CachingKey CART_QUOTE = const CachingKey('CART_QUOTE');
-  static const CachingKey GUEST_CART_QUOTE = const CachingKey('GUEST_CART_QUOTE');
+  static const CachingKey NATIONALITY_ID = const CachingKey('NATIONALITY_ID');
+  static const CachingKey ArFirst = const CachingKey('ArFirst');
+  static const CachingKey ArFather = const CachingKey('ArFather');
+  static const CachingKey ArGrand = const CachingKey('ArGrand');
+  static const CachingKey ArFamily = const CachingKey('ArFamily');
+  static const CachingKey EnFirst = const CachingKey('EnFirst');
+  static const CachingKey EnFather = const CachingKey('EnFather');
+  static const CachingKey EnGrand = const CachingKey('EnGrand');
+  static const CachingKey EnFamily = const CachingKey('EnFamily');
+  static const CachingKey ArTwoNames = const CachingKey('ArTwoNames');
+  static const CachingKey EnTwoNames = const CachingKey('EnTwoNames');
+  static const CachingKey ArFullName = const CachingKey('ArFullName');
+  static const CachingKey EnFullName = const CachingKey('EnFullName');
+  static const CachingKey Gender = const CachingKey('Gender');
+  static const CachingKey IdIssueDateG = const CachingKey('IdIssueDateG');
+  static const CachingKey IdIssueDateH = const CachingKey('IdIssueDateH');
+  static const CachingKey IdExpiryDateG = const CachingKey('IdExpiryDateG');
+  static const CachingKey IdExpiryDateH = const CachingKey('IdExpiryDateH');
+  static const CachingKey Nationality = const CachingKey('Nationality');
+  static const CachingKey Language = const CachingKey('Language');
+  static const CachingKey ArNationality = const CachingKey('ArNationality');
+  static const CachingKey EnNationality = const CachingKey('EnNationality');
+  static const CachingKey DobG = const CachingKey('DobG');
+  static const CachingKey DobH = const CachingKey('DobH');
+  static const CachingKey status = const CachingKey('status');
+
 
 }
 

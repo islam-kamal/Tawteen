@@ -1,7 +1,16 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
+class PersonalInfoWidget extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return PersonalInfoWidgetState();
+  }
 
-class PersonalInfoWidget extends StatelessWidget {
+}
+class PersonalInfoWidgetState extends State<PersonalInfoWidget> {
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -36,6 +45,7 @@ class PersonalInfoWidget extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(vertical: Shared.width * 0.06),
                                   child:  profilePagesIndictor(context: context,),
                                 ),
+
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.06),
                         child: Column(
@@ -49,7 +59,7 @@ class PersonalInfoWidget extends StatelessWidget {
                             Container(
                               width: Shared.width,
                               child: CustomTextField(
-                                hint: knationalIdentificationNumber.tr(),
+                                hint: Shared.nafathInfoEntity!.id!.toString(),
                                 alignment: translator.activeLanguageCode == 'ar'
                                     ? TextAlign.right
                                     : TextAlign.left,
@@ -66,7 +76,8 @@ class PersonalInfoWidget extends StatelessWidget {
                             Container(
                               width: Shared.width,
                               child: CustomTextField(
-                                hint: kfirstName.tr(),
+                                hint: translator.activeLanguageCode == 'ar' ?
+                                Shared.nafathInfoEntity!.arFirst!.toString() :  Shared.nafathInfoEntity!.enFirst!.toString(),
                                 alignment: translator.activeLanguageCode == 'ar'
                                     ? TextAlign.right
                                     : TextAlign.left,
@@ -83,7 +94,9 @@ class PersonalInfoWidget extends StatelessWidget {
                             Container(
                               width: Shared.width,
                               child: CustomTextField(
-                                hint: klastname.tr(),
+                                hint: translator.activeLanguageCode == 'ar' ?
+                                Shared.nafathInfoEntity!.arFather!.toString() :  Shared.nafathInfoEntity!.enFather!.toString(),
+
                                 alignment: translator.activeLanguageCode == 'ar'
                                     ? TextAlign.right
                                     : TextAlign.left,
@@ -100,7 +113,7 @@ class PersonalInfoWidget extends StatelessWidget {
                             Container(
                               width: Shared.width,
                               child: CustomTextField(
-                                hint: kdateofbirth.tr(),
+                                hint: Shared.nafathInfoEntity!.dobG.toString(),
                                 alignment: translator.activeLanguageCode == 'ar'
                                     ? TextAlign.right
                                     : TextAlign.left,
@@ -121,7 +134,7 @@ class PersonalInfoWidget extends StatelessWidget {
                             Container(
                               width: Shared.width,
                               child: CustomTextField(
-                                hint: kgender.tr(),
+                                hint: Shared.nafathInfoEntity!.gender == "M"? kmale.tr() : kfemale.tr(),
                                 alignment: translator.activeLanguageCode == 'ar'
                                     ? TextAlign.right
                                     : TextAlign.left,

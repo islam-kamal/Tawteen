@@ -13,9 +13,22 @@ class click extends AppEvent{
 
 
 //Nafath
-class NafathActionEvent extends AppEvent{
+class SendNafathRequestEvent extends AppEvent{
   String? nationalId;
-  NafathActionEvent({this.nationalId});
+  SendNafathRequestEvent({this.nationalId});
+}
+class CheckNafathStatusEvent extends AppEvent{
+  String? nationalId;
+  String? transId ; String? random;
+  CheckNafathStatusEvent({this.nationalId,this.transId,this.random});
+}
+class ApplicantCheckExistEvent extends AppEvent{
+  String? nationalId;
+  ApplicantCheckExistEvent({this.nationalId});
+}
+class GetApplicantDataEvent extends AppEvent{
+  String? nationalId;
+  GetApplicantDataEvent({this.nationalId});
 }
 //User info
 class UserInfoClick extends AppEvent{
@@ -85,6 +98,11 @@ class ApplyJobEvent extends AppEvent{
 
 }
 
+
+//PREVIOUS JOBS
+class GetPreviousJobsEvent extends AppEvent{
+
+}
 //COURSES
 class GetAllCoursesEvent extends AppEvent{
   BuildContext? context;

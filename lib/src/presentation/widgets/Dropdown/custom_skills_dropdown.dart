@@ -69,11 +69,11 @@ class _CustomSkillsDropdownState extends State<CustomSkillsDropdown> {
 
             ),
             onChanged: (item){
-              List<String> data = [];
+              Shared.applicant_skills = [];
               item.forEach((element) {
-                data.add(element.id.toString());
+                Shared.applicant_skills .add(element.id.toString());
               });
-              sharedPreferenceManager.writeData(CachingKey.SKILLS_ID, data);
+              sharedPreferenceManager.writeData(CachingKey.SKILLS_ID, Shared.applicant_skills );
 
             },
 

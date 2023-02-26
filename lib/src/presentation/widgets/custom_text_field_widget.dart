@@ -94,7 +94,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           }
           else if(widget.identity!){
             print("7");
-            Pattern pattern = r'^[1-3](19|20)\d{2}[7-8]\d{7}[0-9]\d{2}$';
+            Pattern pattern = r'^1\d{9}$';
             RegExp regex = new RegExp(pattern.toString());
             print("value : ${value}");
             print("regx : ${regex.hasMatch(value) }");

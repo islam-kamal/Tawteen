@@ -31,20 +31,14 @@ class SignUpBloc extends Bloc<AppEvent,AppState> with Validator{
 
   Future<void> _onClick(click event , Emitter<AppState> emit)async{
     emit( Loading(model: null));
-    var response = await AuthenticationRepository.signUp(
-      firstname:   fristname_controller.value,
-      mobile:  mobile_controller.value,
-      email: email_controller.value,
-      password: password_controller.value,
-      lastname:  lastname_controller.value,
-    );
-    if(response.success == "true" ){
+    var response = await AuthenticationRepository.signUp();
+    if(response.succeeded == true ){
       sharedPreferenceManager.writeData(CachingKey.EMAIL,email_controller.value);
       emit( Done(model:response));
+    }else{
+      emit( ErrorLoading(model: response));
     }
-    else if (response.success == "false"){
-        emit( ErrorLoading(model: response));
-    }
+
   }
 
 

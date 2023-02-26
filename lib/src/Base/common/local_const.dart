@@ -4,6 +4,7 @@ String kLogin = "Login";
 String kDontHaveAndAccount =   "Don't have an account";
 String kRegisterNow =  "Register now" ;
 String kEnter_the_phone_correctly = "Enter_the_phone_correctly";
+String kEnter_email_correctly = "Enter_email_correctly";
 String kEnter_the_identity = "Enter_identity_number";
 String kidentity_number ="identity_number";
 String kNext = "Next";
@@ -87,3 +88,18 @@ String kstart_date = "start_date";
 String kend_date = "end_date";
 String kdescription = "description";
 String kaddexperience = "addexperience";
+
+String kactive = "active";
+String kdeleted = "deleted";
+String kunderVerified = "underVerified";
+String ksuspended = "suspended";
+String krejected = "rejected";
+String kcancelled = "cancelled";
+String kaccepted = "accepted";
+String kpending = "pending";
+String kall = "all";
+String kunderProcessing = "underProcessing";
+String kmale = "male";
+String kfemale = "female";
+
+

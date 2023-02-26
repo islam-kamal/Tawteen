@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/domain/entities/nafath_info_entity.dart';
 import 'package:code/src/presentation/bloc/Nafath_Bloc/nafath_bloc.dart';
-import 'package:code/src/presentation/pages/Authentiaction/signup_screen.dart';
 import 'package:code/src/presentation/pages/Jobs/jobs_search_results_screen.dart';
 import 'package:code/src/presentation/pages/Profile/personal_info_widget.dart';
 import 'package:code/src/presentation/widgets/custom_scroll_calendar.dart';
@@ -37,13 +39,35 @@ class SiginScreenState extends State<SiginScreen>{
                   }else if(state is Done){
                     print("Done");
                     Shared.dismissDialog(context: context);
+                      customAnimatedPushNavigation(context, PersonalInfoWidget());
+                  }else if(state is SendNafthRequestDone){
+                    print("SendNafthRequestDone");
+                    Shared.dismissDialog(context: context);
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text("Show Alert Dialog Box"),
+                        content: Text("${state.model!.random!}"),
+                        actions: <Widget>[
+                          OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
 
-                    customAnimatedPushNavigation(
-                        context, SignUpScreen());
-
-                  }else if(state is ErrorLoading){
+                              nafath_bloc.add(CheckNafathStatusEvent(
+                                random: state.model!.random!.toString(),
+                                transId: state.model!.transId!.toString(),
+                                nationalId: state.nationalId
+                              ));
+                            },
+                            child: Text("Ok"),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if(state is ErrorLoading){
+                  //  Shared.dismissDialog(context: context);
                     print("ErrorLoading");
-                    Shared.showSnackBarView(
+                   Shared.showSnackBarView(
                         title_status: false,
                         backend_message:  state.message!,
                         backgroundColor: kRedColor,
@@ -91,15 +115,15 @@ class SiginScreenState extends State<SiginScreen>{
                             button_text: kLogin.tr(),
                             width: Shared.width * 0.9,
                             height: Shared.width * 0.13,
-                            onPress: (){
+                            onPress: ()async{
+                            await  sharedPreferenceManager.readString(CachingKey.ArFirst).then((value){
+                                print("value : ${value}");
+                              });
 
-
-                              nafath_bloc.add(NafathActionEvent(
-                                nationalId: "1129184063"
+                              nafath_bloc.add(SendNafathRequestEvent(
+                                nationalId: "1094486956"
                               ));
-                          /*    customAnimatedPushNavigation(
-                                  context, CustomScrollCalendar()
-                              );*/
+
 
 
                             },
@@ -112,7 +136,16 @@ class SiginScreenState extends State<SiginScreen>{
                             style: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.bold,color: kGreyColor),),
 
                           InkWell(
-                            onTap: (){
+                            onTap: () async {
+                              Shared.nafathInfoEntity = new NafathInfoEntity(
+                                id: await sharedPreferenceManager.readInt(CachingKey.NATIONALITY_ID),
+                                arFirst: await sharedPreferenceManager.readString(CachingKey.ArFirst),
+                                arFather: await sharedPreferenceManager.readString(CachingKey.ArFather),
+                                enFirst: await sharedPreferenceManager.readString(CachingKey.EnFirst),
+                                enFather: await sharedPreferenceManager.readString(CachingKey.EnFather),
+                                gender: await sharedPreferenceManager.readString(CachingKey.Gender),
+                                dobG: await sharedPreferenceManager.readString(CachingKey.DobG),
+                              );
                                customAnimatedPushNavigation(
                                   context, PersonalInfoWidget()
                               );

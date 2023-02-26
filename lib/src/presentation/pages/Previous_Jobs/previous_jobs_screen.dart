@@ -1,5 +1,8 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/JobModel/all_jobs_model.dart';
+import 'package:code/src/data/models/PreviousJobModel/previous_job_model.dart';
 import 'package:code/src/domain/entities/search_result_entity.dart';
+import 'package:code/src/presentation/bloc/Previous_Job_Bloc/previous_job_bloc.dart';
 import 'package:provider/provider.dart';
 
 class PreviousJobsScreen extends StatefulWidget {
@@ -57,6 +60,11 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
   ];
 
   @override
+  void initState() {
+    previousJobsBloc.add(GetPreviousJobsEvent());
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return NetworkIndicator(
       child: PageContainer(
@@ -107,15 +115,6 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                       color: kWhiteColor,
                     ),
                   )
-
-
-                /*       leading: icon! ? IconButton(
-            icon: Icon(Icons.arrow_back_ios,color: kWhiteColor,),
-            onPressed: (){
-              customAnimatedPushNavigation(context!, route! );
-
-            },
-          ) : Container(),*/
               )),
           backgroundColor: kWhiteColor,
           body: Container(
@@ -156,8 +155,47 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                               padding: EdgeInsets.only(
                                 bottom: Shared.width * 0.1,
                               ),
-                              child: ListView.builder(
-                                  itemCount: jobs_list.length,
+                              child: BlocBuilder(
+                                bloc: previousJobsBloc,
+                                builder: (context,state){
+                                  if(state is Loading){
+                                    return Padding(
+                                      padding: EdgeInsets.only(top: Shared.width * 0.4, ),
+                                      child: Center(
+                                        child: Shared.spinkit,
+                                      ),
+                                    );
+                                  }
+                                  else if(state is Done){
+                                    return StreamBuilder<PreviousJobModel>(
+                                        stream: previousJobsBloc.previous_jobs_subject,
+                                        builder: (context,snapshot){
+                                          switch (snapshot.connectionState) {
+                                            case ConnectionState.none:
+                                              return Padding(
+                                                padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                                child: Center(
+                                                    child: Shared.spinkit
+                                                ),
+                                              );
+                                            case ConnectionState.done:
+                                              return Text('');
+                                            case ConnectionState.waiting:
+                                              return Padding(
+                                                padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                                child: Center(
+                                                    child: Shared.spinkit
+                                                ),
+                                              );
+                                            case ConnectionState.active:
+                                              if (snapshot.hasError) {
+                                                return Center(
+                                                  child: Text(snapshot.error.toString()),
+                                                );
+                                              }
+                                              else if (snapshot.data!.data!.length > 0) {
+                                                return ListView.builder(
+                                  itemCount: snapshot.data!.data!.length,
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
@@ -166,9 +204,22 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                                           vertical: Shared.width * 0.02,
                                           horizontal: Shared.width * 0.04),
                                       child: previous_jobs_element(
-                                          jobEntity: jobs_list[index]),
+                                          previous_job: snapshot.data!.data![index]),
                                     );
-                                  }),
+                                  });
+                                              }
+                                              else
+                                                return no_data_widget(context: context);
+                                          }
+                                        });
+
+                                  }else if(state is ErrorLoading){
+                                    return no_data_widget(context: context);
+                                  }
+                                  return Container();
+                                },
+                              )
+
                             ),
                           ],
                         ),
@@ -180,7 +231,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
     );
   }
 
-  Widget previous_jobs_element({JobEntity? jobEntity}) {
+  Widget previous_jobs_element({PreviousJob? previous_job}) {
     return InkWell(
       onTap: () {
         customAnimatedPushNavigation(context, JobDetailsScreen());
@@ -200,7 +251,21 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                         padding: EdgeInsets.symmetric(
                             vertical: Shared.width * 0.01,
                             horizontal: Shared.width * 0.02),
-                        child: Image.asset(jobEntity!.image!))),
+                        child: Image.asset(ImageAssets.placeholder)
+                      /*FadeInImage(
+                  image: NetworkImage(
+                      baseUrl + previous_job!.attachments!.firstWhere((element) => element.status ==1).filePath!
+                  ),
+                  placeholder: AssetImage(ImageAssets.placeholder),
+                  imageErrorBuilder:
+                      (context, error, stackTrace) {
+                    return Image.asset(
+                        ImageAssets.placeholder,
+                        fit: BoxFit.cover);
+                  },
+                  fit: BoxFit.cover,
+                )*/
+                    )),
                 Expanded(
                     flex: 4,
                     child: Padding(
@@ -216,7 +281,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                                   vertical: Shared.width * 0.02,
                                 ),
                                 child: Text(
-                                  jobEntity.title!,
+                                  previous_job!.jobTitleName!,
                                   style: TextStyle(
                                       fontSize: Shared.width * 0.04,
                                       fontWeight: FontWeight.bold,
@@ -235,7 +300,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                                           color: kGreyColor),
                                     ),
                                     Text(
-                                      jobEntity.publish_date!,
+                                      previous_job.creationDate!.substring(0,10),
                                       style: TextStyle(
                                           fontSize: Shared.width * 0.03,
                                           color: kGreyColor),
@@ -252,7 +317,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                                           color: kGreyColor),
                                     ),
                                     Text(
-                                      jobEntity.end_date!,
+                                      previous_job.endDateOfApplicantsAcceptance!.substring(0,10),
                                       style: TextStyle(
                                           fontSize: Shared.width * 0.03,
                                           color: kGreyColor),
@@ -271,10 +336,10 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
               left: translator.activeLanguageCode == 'ar' ? 0 : null,
               right: translator.activeLanguageCode == 'ar' ? null : 0,
               child: Container(
-                width: Shared.width * 0.25,
-                padding: EdgeInsets.symmetric(vertical: 5),
+               // width: Shared.width * 0.25,
+                padding: EdgeInsets.symmetric(vertical: 5,horizontal: Shared.width * 0.03),
                 decoration: BoxDecoration(
-                    color: status_color(jobEntity.status!),
+                    color: status_color(previous_job.status ).color,
                     borderRadius: BorderRadius.only(
                         topLeft: translator.activeLanguageCode == 'ar'
                             ? Radius.circular(Shared.width * 0.02)
@@ -283,7 +348,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                             ? Radius.circular(0)
                             : Radius.circular(Shared.width * 0.02))),
                 child: Text(
-                  "${jobEntity.status}",
+                  "${status_color(previous_job.status ).status}",
                   style: TextStyle(fontWeight: FontWeight.normal,color: kWhiteColor),
                   textAlign: TextAlign.center,
                 ),
@@ -293,20 +358,79 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
     );
   }
 
-  Color status_color(String status){
+  JobStatus status_color(int? status){
     switch(status){
-      case 'Pending':
-        return kYellowColor;
+      case 1:
+        return JobStatus(
+          color: kBlackColor,
+          status: kactive.tr()
+        );
         break;
-      case 'Accept':
-        return kGreenColor;
+      case 2:
+        return JobStatus(
+            color: kRedColor,
+            status: kdeleted.tr()
+        );
         break;
-      case 'Cancelled':
-        return kRedColor;
+      case 3:
+        return JobStatus(
+            color: kInactiveColor,
+            status: kunderVerified.tr()
+        );
+        break;
+      case 4:
+        return JobStatus(
+            color: kPrimaryColor,
+            status: ksuspended.tr()
+        );
+        break;
+      case 5:
+        return JobStatus(
+            color: kRedColor,
+            status: krejected.tr()
+        );
+        break;
+      case 6:
+        return JobStatus(
+            color: kRedColor,
+            status:kcancelled.tr()
+        );
+        break;
+      case 7:
+        return JobStatus(
+            color: kGreenColor,
+            status: kaccepted.tr()
+        );
+        break;
+      case 8:
+        return JobStatus(
+            color: kYellowColor,
+            status: kpending.tr()
+        );
+        break;
+      case 9:
+        return JobStatus(
+            color: kWhiteColor,
+            status: kall.tr()
+        );
+        break;
+      case 10:
+        return JobStatus(
+            color: kYellowColor,
+            status: kunderProcessing.tr()
+        );
         break;
       default:
-        return kYellowColor;
+        return JobStatus(
+            color: kAvailableColor,
+            status: kactive.tr()
+        );
 
     }
   }
+}
+class JobStatus{
+  Color? color;
+  String? status;
+  JobStatus({this.color,this.status});
 }

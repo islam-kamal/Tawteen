@@ -29,7 +29,7 @@ SharedPreferenceManager sharedPreferenceManager =SharedPreferenceManager();
           contentType: 'application/json',
         )
       );
-    //  print("get response : ${response}");
+      print("get response : ${response}");
     } on DioError catch (e) {
       print("get error : ${e}");
       if (e.response != null) {
@@ -45,10 +45,12 @@ SharedPreferenceManager sharedPreferenceManager =SharedPreferenceManager();
     dio.options.baseUrl = baseUrl;
     try {
       print("post url : ${url}");
+
       response = await dio.post(url,
           data: body,
           options: Options(headers: headers, requestEncoder: encoding ,
-              followRedirects: false,  validateStatus: (status) { return status! < 500; }));
+              followRedirects: false,  validateStatus: (status) { return status! < 500; })
+      );
       print("post response : ${response}");
     } on DioError catch (e) {
       print("post error : ${e}");

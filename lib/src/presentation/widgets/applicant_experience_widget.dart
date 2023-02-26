@@ -144,7 +144,8 @@ class ApplicantExperienceWidgetState extends State<ApplicantExperienceWidget> {
                                         .readString(translator.activeLanguageCode =='ar' ?
                                     CachingKey.JOB_TITLE_NAME_AR : CachingKey.JOB_TITLE_NAME_EN),
                                     orgField: "",
-                                    orgName: facility_Controller.text));
+                                    orgName: facility_Controller.text)
+                                );
                                 experienceBloc.add(AddExperienceEvent(
                                   experienceEntity:  Shared.user_experinces
                                 ));

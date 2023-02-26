@@ -12,24 +12,83 @@ class AuthenticationRepository {
   static SharedPreferenceManager sharedPreferenceManager =
       SharedPreferenceManager();
 
-  static Future<AuthenticationModel> signUp(
-      {String? mobile,
-      String? firstname,
-      String? email,
-      String? password,
-      String? lastname}) async {
+  static Future<AuthenticationModel> signUp() async {
     FormData formData = FormData.fromMap({
-      "mobile": mobile,
-      "password": password,
-      "firstname": firstname,
-      "lastname": lastname,
-      "email": email,
-      //   "firebase_token" : await  sharedPreferenceManager.readString(CachingKey.FIREBASE_TOKEN)
-    });
+      "registerRequest": {
+        "email": "${await sharedPreferenceManager.readString(CachingKey.EMAIL)}",
+        "userName": "${await sharedPreferenceManager.readString(translator.activeLanguageCode == 'ar' ?
+          CachingKey.ArFullName : CachingKey.EnFullName)}",
+        "password": "${await sharedPreferenceManager.readString(CachingKey.EMAIL)}Password@1223",
+        "userTypeId": "3"
+      },
+      "createApplicant": {
+        "name": "${await sharedPreferenceManager.readString( CachingKey.EnFullName)}",
+        "nameEn": "${await sharedPreferenceManager.readString(CachingKey.ArFullName)}",
+        "phone": "${await sharedPreferenceManager.readString(CachingKey.MOBILE_NUMBER)}",
+        "email": "${await sharedPreferenceManager.readString(CachingKey.EMAIL)}",
+        "firstName": "${await sharedPreferenceManager.readString(translator.activeLanguageCode == 'ar' ?
+        CachingKey.ArFirst : CachingKey.EnFirst)}",
+        "secondName": "${await sharedPreferenceManager.readString(translator.activeLanguageCode == 'ar' ?
+        CachingKey.ArFather : CachingKey.EnFather)}",
+        "thirdName": "${await sharedPreferenceManager.readString(translator.activeLanguageCode == 'ar' ?
+        CachingKey.ArFamily : CachingKey.EnFamily)}",
+        "lastName": "${await sharedPreferenceManager.readString(translator.activeLanguageCode == 'ar' ?
+        CachingKey.ArGrand : CachingKey.EnGrand)}",
+        "gender": "${await sharedPreferenceManager.readString( CachingKey.Gender)}",
+        "maritalStatus": "${await sharedPreferenceManager.readString( CachingKey.Gender)}",
+        "birthdate": "${await sharedPreferenceManager.readString( CachingKey.DobG)}",
+        "birthdateHijri": "${await sharedPreferenceManager.readString( CachingKey.DobH)}",
+        "nationality": "${await sharedPreferenceManager.readInt( CachingKey.Nationality)}",
+        "idNo": "${await sharedPreferenceManager.readInt( CachingKey.NATIONALITY_ID)}",
+        "resumeURL": "",
+        "educationLevelId": await sharedPreferenceManager.readString( CachingKey.EDUCTIONAL_LEVEL_ID),
+        "educationMajorId": await sharedPreferenceManager.readString( CachingKey.EDUCTION_MAJOR_ID),
+        "jobTitleId": await sharedPreferenceManager.readString( CachingKey.JOB_TITLE_ID),
+        "provinceId": await sharedPreferenceManager.readString( CachingKey.PROVINCE_ID),
+        "cityId": await sharedPreferenceManager.readString( CachingKey.CITY_ID),
+        "hasDrivingLicense": true,
+        "status": "1",
+        "creationDate": "2023-02-22T11:21:45.534Z",
+        "createBy": "cairo",
+        "applicationUserId": "string",
+        "jobTitleOtherName": "cairo",
+        "educationMajorOtherName": "cairo",
+        "applicantSkills":Shared.applicant_skills.map((skill_id) => {
+          {
+            "applicantId": 0,
+            "skillId": skill_id
+          }
+        }).toList(),
+        "workExperiences":Shared.user_experinces
+            .map((e)  => {
+          "countryId": e.countryId,
+          "provinceId": e.provinceId,
+          "cityId": e.cityId,
+          "jobTitleId":e.jobTitleId,
+          "startMonth": e.startMonth,
+          "startYear": e.startYear,
+          "endMonth": e.endMonth,
+          "endYear": e.endYear,
+          "address": e.address,
+          "orgName": e.orgName,
+          "orgField": e.orgField,
+          "jobRoleName": e.jobRoleName,
+          "description": e.description,
+          "createBy": e.createBy
+    }).toList(),
+
+      }
+    }
+    );
+
 
     return NetworkUtil.internal().post(AuthenticationModel(),
-        baseUrl +  "url",
-        body: formData);
+        baseUrl +  "api/v1/register-applicants",
+        body: formData,
+        headers: Map<String, String>.from({
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }));
   }
 
   static Future<String?> signIn(
