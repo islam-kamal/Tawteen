@@ -122,7 +122,7 @@ class JobsSearchResultsScreenState extends State<JobsSearchResultsScreen> {
                                                         return Padding(
                                                           padding: EdgeInsets.symmetric(
                                                               vertical: Shared.width * 0.02,
-                                                              horizontal: Shared.width * 0.04),
+                                                              horizontal: Shared.width * 0.02),
                                                           child: job_search_result_element(
                                                               searchedJob: snapshot.data!.data![index]),
                                                         );

@@ -1,5 +1,7 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/pages/Courses/courses_screen.dart';
+import 'package:code/src/presentation/pages/Initiatives/Initatives/initatives_screen.dart';
+import 'package:code/src/presentation/pages/Jobs/Available_jobs/available_jobs.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,7 +25,8 @@ class HomeScreenState extends State<HomeScreen> {
         image: ImageAssets.course,
         title: ktrainingcourses,
         screen: CoursesScreen()),
-    ElementEntity(image: ImageAssets.initiative, title: kinitiatives)
+    ElementEntity(image: ImageAssets.initiative, title: kinitiatives,
+    screen: InitativesScreen())
   ];
 
   @override
@@ -47,7 +50,7 @@ class HomeScreenState extends State<HomeScreen> {
               color: kHaviyGreenColor,
               child: Column(
                 children: [
-                  welcome(),
+                  Shared.vistor_value == 'visitor' ? Container(height: Shared.width * 0.1): welcome(),
                   Container(
                     height: Shared.height,
                     padding: EdgeInsets.only(top: 10),
@@ -83,7 +86,7 @@ class HomeScreenState extends State<HomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
+              Expanded(
                 child: Row(
               children: [
                 Text(
@@ -94,11 +97,13 @@ class HomeScreenState extends State<HomeScreen> {
                       fontSize: 14),
                 ),
                 Text(
-                  " مؤيد الأمين",
+                 " ${translator.activeLanguageCode == 'en' ? Shared.nafathInfoEntity!.enFirst!.toLowerCase()
+                      : Shared.nafathInfoEntity!.arFirst!.toLowerCase()} ",
+              //  "مؤيد امين",
                   style: TextStyle(
                       color: kWhiteColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
+                      fontWeight: FontWeight.normal,
+                      fontSize: 17),
                 )
               ],
             )),

@@ -1,14 +1,17 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/data/repositories/NafathRepo/nafath_repository.dart';
 import 'package:code/src/domain/entities/nafath_info_entity.dart';
+import 'package:code/src/domain/entities/user_entity.dart';
 
 class NafathBloc extends Bloc<AppEvent,AppState>{
   Timer? timer;
+  int _start = 0;
   NafathBloc():super(Start()){
     on<SendNafathRequestEvent>(_onSendNafathRequestActionFun);
     on<CheckNafathStatusEvent>(_onCheckNafathStatusFun);
     on<ApplicantCheckExistEvent>(_onApplicantCheckExistFun);
     on<GetApplicantDataEvent>(_onGetApplicantDataFun);
+    on<loginClickEvent> (_onSigninFun);
   }
 
 
@@ -16,22 +19,17 @@ class NafathBloc extends Bloc<AppEvent,AppState>{
       SendNafathRequestEvent event, Emitter<AppState> emit) async {
     try {
       emit(Loading());
-      print(" 1");
       var sendNafathRequestResponse = await nafath_repository.sendNafathRequest(
         nationalId: event.nationalId
       );
-      print(" 2");
       if (sendNafathRequestResponse!.random != null) {
-        print(" 3");
         emit(SendNafthRequestDone(model: sendNafathRequestResponse ,
             indicator: "sendNafathRequestResponse",nationalId: event.nationalId));
-               print(" 4");
       } else {
-        print(" 5");
-        emit(ErrorLoading(model: sendNafathRequestResponse,indicator: "sendNafathRequestResponse"));
+        emit(ErrorSendNafthRequest(model: sendNafathRequestResponse,
+            message: "invalid data"));
       }
     } catch (e) {
-      print("sendNafathRequest 6");
       emit(
         ErrorLoading(
           message: "Failed to fetch data. Is your device online ?",
@@ -43,15 +41,18 @@ class NafathBloc extends Bloc<AppEvent,AppState>{
   Future<void> _onCheckNafathStatusFun(
       CheckNafathStatusEvent event, Emitter<AppState> emit) async {
     try {
+      print("11");
       emit(Loading());
+      print("22");
         var nafathCheckStatusResponse = await nafath_repository.nafathCheckStatus(
             nationalId: event.nationalId,
             transId: event.transId.toString(),
             random: event.random.toString()
         );
+      print("33");
         print("nafathCheckStatusResponse!.status : ${nafathCheckStatusResponse!.status}");
         if(nafathCheckStatusResponse.status ==  "COMPLETED"){
-
+          print("44");
           sharedPreferenceManager.writeData(CachingKey.NATIONALITY_ID, nafathCheckStatusResponse.id);
           sharedPreferenceManager.writeData(CachingKey.ArFullName, nafathCheckStatusResponse.arFullName);
           sharedPreferenceManager.writeData(CachingKey.EnFullName, nafathCheckStatusResponse.enFullName);
@@ -74,42 +75,72 @@ class NafathBloc extends Bloc<AppEvent,AppState>{
           sharedPreferenceManager.writeData(CachingKey.Nationality, nafathCheckStatusResponse.nationality);
           sharedPreferenceManager.writeData(CachingKey.ArNationality, nafathCheckStatusResponse.arNationality);
           sharedPreferenceManager.writeData(CachingKey.EnNationality, nafathCheckStatusResponse.enNationality);
-          print("5");
+          print("55");
           timer!.cancel();
-        nafath_bloc.add(ApplicantCheckExistEvent(
-          nationalId: event.nationalId
-        ));
-
+          print("66");
+          emit(NafathCheckStatusDone(
+              model: nafathCheckStatusResponse,
+              nationalId: nafathCheckStatusResponse.id.toString())
+          );
+          print("77");
         }
         else if(nafathCheckStatusResponse.status ==  "WAITING"){
           print("WAITING 1");
-          timer = Timer.periodic(Duration(seconds: 10), (Timer t) async {
+          print("88");
+          const oneSec = const Duration(seconds: 10);
+          timer = new Timer.periodic(
+              oneSec,
+                  (Timer timer) {
+                    if (_start > 30) {
+                      timer.cancel();
+                      print("%%%%%%%%%%%%%%% timer stopped %%%%%%%%%%%%%%%");
+                     Future.delayed(Duration(seconds: 2),
+                     ()async{
+                       emit(ErrorNafathCheckStatus(model: nafathCheckStatusResponse));
+                     });
+                    } else {
+                      _start = _start + 10;
+                      Shared.dismissDialog(context: navigatorKey.currentContext!);
+                      nafath_bloc.add(CheckNafathStatusEvent(
+                        nationalId: event.nationalId,
+                        random: event.random!.toString(),
+                        transId: event.transId!.toString(),
+                      ));
+                    }
+              });
+  /*        timer = Timer.periodic(Duration(seconds: 10), (Timer t) async {
             Shared.dismissDialog(context: navigatorKey.currentContext!);
             nafath_bloc.add(CheckNafathStatusEvent(
                 nationalId: event.nationalId,
                 random: event.random!.toString(),
                 transId: event.transId!.toString(),
             ));
-          });
-
+          });*/
+          print("99");
           print("WAITING 2");
         }
         else if(nafathCheckStatusResponse.status ==  "EXPIRED"){
           print("EXPIRED 1");
-          timer!.cancel();
+          print("---10");
+      //    timer!.cancel();
       //    Shared.dismissDialog(context: navigatorKey.currentContext!);
       /*    nafath_bloc.add(SendNafathRequestEvent(
               nationalId: event.nationalId
           ));*/
-          emit(ErrorLoading(model: nafathCheckStatusResponse));
+          print("---11");
+          emit(ErrorNafathCheckStatus(model: nafathCheckStatusResponse));
           print("EXPIRED 2");
+
         } else{
-          emit(ErrorLoading(model: nafathCheckStatusResponse));
+
+          print("---12");
+          emit(ErrorNafathCheckStatus(model: nafathCheckStatusResponse,));
         }
 
 
     } catch (e) {
-      timer!.cancel();
+  //    timer!.cancel();
+      print("---13");
       print("e : ${e.toString()}");
       emit(
         ErrorLoading(
@@ -128,11 +159,9 @@ class NafathBloc extends Bloc<AppEvent,AppState>{
       );
       print("checkApplicantExistResponse : ${checkApplicantExistResponse!..toJson()}");
       if(checkApplicantExistResponse.data == 1){
-        nafath_bloc.add(GetApplicantDataEvent(
-          nationalId: event.nationalId
-        ));
+        emit(CheckApplicantExistDone(model: checkApplicantExistResponse,indicator: checkApplicantExistResponse.data.toString()));
       }else{
-        emit(ErrorLoading(model: checkApplicantExistResponse));
+        emit(ErrorCheckApplicantExist(model: checkApplicantExistResponse,message: checkApplicantExistResponse.message));
       }
     } catch (e) {
       emit(
@@ -151,11 +180,49 @@ class NafathBloc extends Bloc<AppEvent,AppState>{
         nationalId: event.nationalId,
       );
       print("getApplicantDataResponse : ${getApplicantDataResponse!.toJson()}");
-      if(getApplicantDataResponse.httpStatusCode == 200){
-
-        emit(Done(model: getApplicantDataResponse));
+      if(getApplicantDataResponse.httpStatusCode == 200 || getApplicantDataResponse.httpStatusCode == 201){
+        sharedPreferenceManager.writeData(CachingKey.EMAIL, getApplicantDataResponse.data!.email);
+        emit(GetApplicantDataDone(model: getApplicantDataResponse));
       }else{
-        emit(ErrorLoading(model: getApplicantDataResponse));
+        emit(ErrorGetApplicantData(model: getApplicantDataResponse,message: getApplicantDataResponse.message));
+      }
+    } catch (e) {
+      emit(
+        ErrorLoading(
+          message: "Failed to fetch data. Is your device online ?",
+        ),
+      );
+    }
+  }
+
+  Future<void> _onSigninFun(
+      loginClickEvent event, Emitter<AppState> emit) async {
+    try {
+      emit(Loading());
+      var siginResponse = await nafath_repository.signIn();
+      print("siginResponse : ${siginResponse!.toJson()}");
+      if(siginResponse.succeeded! ){
+        sharedPreferenceManager.writeData(CachingKey.EMAIL, siginResponse.data!.email);
+        sharedPreferenceManager.writeData(CachingKey.AUTH_TOKEN, siginResponse.data!.jwToken);
+        sharedPreferenceManager.writeData(CachingKey.APPLICANT_ID, siginResponse.data!.applicationId);
+        sharedPreferenceManager.writeData(CachingKey.AUTH_TOKEN, siginResponse.data!.jwToken);
+        Shared.nafathInfoEntity = new NafathInfoEntity(
+          id: await sharedPreferenceManager.readInt(CachingKey.NATIONALITY_ID),
+          arFirst: await sharedPreferenceManager.readString(CachingKey.ArFirst),
+          arFather: await sharedPreferenceManager.readString(CachingKey.ArFather),
+          enFirst: await sharedPreferenceManager.readString(CachingKey.EnFirst),
+          enFather: await sharedPreferenceManager.readString(CachingKey.EnFather),
+          gender: await sharedPreferenceManager.readString(CachingKey.Gender),
+          dobG: await sharedPreferenceManager.readString(CachingKey.DobG),
+          email: await sharedPreferenceManager.readString(CachingKey.EMAIL),
+          city_id: await sharedPreferenceManager.readString(CachingKey.CITY_ID),
+          city_name_ar: await sharedPreferenceManager.readString(CachingKey.CITY_NAME_AR),
+          city_name_en: await sharedPreferenceManager.readString(CachingKey.CITY_NAME_En),
+           phone:  await sharedPreferenceManager.readString(CachingKey.MOBILE_NUMBER),
+        );
+        emit(SiginDone(model: siginResponse));
+      }else{
+        emit(ErrorSigin(model: siginResponse,message: siginResponse.message));
       }
     } catch (e) {
       emit(

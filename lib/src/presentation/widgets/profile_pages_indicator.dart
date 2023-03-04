@@ -1,5 +1,5 @@
 import 'package:code/src/Base/common/file_export.dart';
-import 'package:code/src/presentation/pages/Profile/educational_data_widget.dart';
+import 'package:code/src/presentation/pages/Profile/profile_educational_data_widget.dart';
 
 profilePagesIndictor({
   BuildContext? context,
@@ -37,7 +37,7 @@ profilePagesIndictor({
                   InkWell(
                     onTap: () {
                       customAnimatedPushNavigation(
-                          navigatorKey.currentContext!, ContactInfoWidget());
+                          navigatorKey.currentContext!, ProfileContactInfoWidget());
                     },
                     child: indicator_element(
                         context: context,
@@ -53,7 +53,7 @@ profilePagesIndictor({
                   InkWell(
                     onTap: () {
                       customAnimatedPushNavigation(
-                          navigatorKey.currentContext!, EductionalDataWidget());
+                          navigatorKey.currentContext!, ProfileEductionalDataWidget());
                     },
                     child: indicator_element(
                         context: context,

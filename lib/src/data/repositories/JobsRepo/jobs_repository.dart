@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:code/src/Base/common/config.dart';
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/data/models/JobModel/all_jobs_model.dart';
@@ -54,21 +56,37 @@ class JobRepository {
       'lang': translator.activeLanguageCode,
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpa2FtYWxAbWFzdGVyLXdvcmtzLnNhIiwianRpIjoiN2ZjOGUzZDgtMTFiMi00MWM3LWJmZjQtNTYzZGYxZjY0MTRkIiwiZW1haWwiOiJpa2FtYWxAbWFzdGVyLXdvcmtzLnNhIiwidWlkIjoiMTEyZTI4NmEtMjMyMS00MjJhLTk3ZjItNWE3NTAzOTY3MWM5IiwiaXAiOiIxMC4yMTcuOTcuMTcxIiwidXNlclR5cGVJZCI6IjMiLCJyb2xlcyI6IkFwcGxpY2FudCIsImV4cCI6MTY3Nzk2Mjc2MiwiaXNzIjoiSWRlbnRpdHkiLCJhdWQiOiJJZGVudGl0eVVzZXIifQ.th1GorLx9IbsyavMStnF80xg6D1Zvc0UcM21xqtWudQ'
     };
-    FormData body = new FormData.fromMap({
-      "status": "1",
-      "applicantId": await sharedPreferenceManager.readString(CachingKey.APPLICANT_ID),
-      "jobId": await sharedPreferenceManager.readString(CachingKey.JOB_ID),
-      "resumeURL": await sharedPreferenceManager.readString(CachingKey.RESUME_URL),
-    });
+
 
     return NetworkUtil.internal().post(
         ApplyJobModel(),
         baseUrl + applyJobUrl,
         headers: headers ,
-      body: body
+      body: jsonEncode({
+        "status": "10",
+        "applicantId":await sharedPreferenceManager.readInt(CachingKey.APPLICANT_ID),
+        "jobId": await sharedPreferenceManager.readString(CachingKey.JOB_ID),
+        "resumeURL": await sharedPreferenceManager.readString(CachingKey.RESUME_URL),
+      })
     );
+  }
+
+
+  Future<ApplyJobModel?> deleteJobRequest() async {
+    Map<String, String> headers = {
+      'lang': translator.activeLanguageCode,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpa2FtYWxAbWFzdGVyLXdvcmtzLnNhIiwianRpIjoiN2ZjOGUzZDgtMTFiMi00MWM3LWJmZjQtNTYzZGYxZjY0MTRkIiwiZW1haWwiOiJpa2FtYWxAbWFzdGVyLXdvcmtzLnNhIiwidWlkIjoiMTEyZTI4NmEtMjMyMS00MjJhLTk3ZjItNWE3NTAzOTY3MWM5IiwiaXAiOiIxMC4yMTcuOTcuMTcxIiwidXNlclR5cGVJZCI6IjMiLCJyb2xlcyI6IkFwcGxpY2FudCIsImV4cCI6MTY3Nzk2Mjc2MiwiaXNzIjoiSWRlbnRpdHkiLCJhdWQiOiJJZGVudGl0eVVzZXIifQ.th1GorLx9IbsyavMStnF80xg6D1Zvc0UcM21xqtWudQ'
+
+    };
+    return NetworkUtil.internal().delete(
+        ApplyJobModel(),
+        baseUrl + "api/v1/applicant-jobs?ApplicantId=${await sharedPreferenceManager.readInt(CachingKey.APPLICANT_ID)}"
+            "&JobId=${ await sharedPreferenceManager.readString(CachingKey.JOB_ID)}",
+        headers: headers  );
   }
 }
 JobRepository jobRepository = new JobRepository();

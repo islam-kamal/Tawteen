@@ -40,7 +40,7 @@ SharedPreferenceManager sharedPreferenceManager =SharedPreferenceManager();
   }
 
   Future<ResponseType> post<ResponseType extends Mappable>(ResponseType responseType, String url,
-      {Map<String, dynamic>? headers, FormData? body, encoding}) async {
+      {Map<String, dynamic>? headers, var body, encoding}) async {
     var response;
     dio.options.baseUrl = baseUrl;
     try {

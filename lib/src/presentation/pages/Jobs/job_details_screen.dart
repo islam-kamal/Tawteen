@@ -1,12 +1,16 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/data/models/JobModel/job_details_model.dart';
+import 'package:code/src/presentation/bloc/Jobs_Bloc/apply_job_bloc.dart';
 import 'package:code/src/presentation/bloc/Jobs_Bloc/get_all_jobs_bloc.dart';
 import 'package:code/src/presentation/pages/Jobs/Apply_Jobs/apply_job_person_info.dart';
+import 'package:code/src/presentation/pages/Jobs/Previous_Jobs/previous_jobs_screen.dart';
 
 class JobDetailsScreen extends StatefulWidget {
   String? job_id;
   Widget? screen;
-  JobDetailsScreen({this.job_id,this.screen});
+  bool? show_cancellation_status;
+  bool? previous_job_status;
+  JobDetailsScreen({this.job_id,this.screen,this.show_cancellation_status = false,this.previous_job_status});
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -37,9 +41,31 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
           appBar: AppBarWidget.appBarWidget(
               context: context, icon: true, route: widget.screen),
           backgroundColor: kWhiteColor,
-          body:  Container(
-                  color: kGreenColor,
-                  child:Container(
+          body:  BlocListener(
+            bloc: apply_job_bloc,
+            listener: (context,state){
+              if(state is Loading){
+                print("Loading");
+                Shared.showLoadingDialog(context: context);
+              }else if(state is Done){
+                print("Done");
+                Shared.dismissDialog(context: context);
+
+                customAnimatedPushNavigation(context, PreviousJobsScreen());
+
+              }else if(state is ErrorLoading){
+                print("ErrorLoading : ${ state.message}");
+                Shared.dismissDialog(context: context);
+                Shared.showSnackBarView(
+                    error_status: true,
+                    backend_message:  state.message,
+                    sigin_button: false
+                );
+              }
+            },
+            child: Container(
+                color: kGreenColor,
+                child:Container(
                     padding: EdgeInsets.only(top: 10),
                     decoration: BoxDecoration(
                       color: kWhiteColor,
@@ -92,7 +118,7 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                                                 vertical: Shared.width * 0.05),
                                             child: Column(
                                               children: [
-                                            /*    Padding(
+                                                /*    Padding(
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal: Shared.width * 0.03),
                                                   child: Row(
@@ -118,20 +144,41 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                                                         child: Column(
                                                           children: [
                                                             job_details_header(
-                                                              jobDetails: snapshot.data!.data
+                                                                jobDetails: snapshot.data!.data
                                                             ),
                                                             job_details_body(
                                                                 jobDetails: snapshot.data!.data
                                                             ),
-                                                            Padding(
+                                                            widget.show_cancellation_status!
+                                                                ?   widget.previous_job_status! ?   Padding(
+                                                                padding: EdgeInsets.symmetric(vertical: Shared.width * 0.05),
+                                                                child: CustomButtonWidget(
+                                                                  button_text: kcanceljob.tr(),
+                                                                  width: Shared.width ,
+                                                                  height: Shared.width * 0.13  ,
+                                                                  color: kRedColor,
+                                                                  onPress: () {
+                                                                    apply_job_bloc.add(DeleteJobEvent());
+                                                                  },
+                                                                )) : Container()
+                                                                : Padding(
                                                                 padding: EdgeInsets.symmetric(vertical: Shared.width * 0.05),
                                                                 child: CustomButtonWidget(
                                                                   button_text: kapplyjob.tr(),
                                                                   width: Shared.width ,
                                                                   height: Shared.width * 0.13,
                                                                   onPress: () {
-                                                                    customAnimatedPushNavigation(
-                                                                        context, ApplyJobPersonInfo());
+                                                                    if(  Shared.vistor_value == 'visitor'){
+                                                                      Shared.showSnackBarView(
+                                                                          error_status: true,
+                                                                          message:  kauthorization.tr(),
+                                                                          sigin_button: true
+                                                                      );
+                                                                    }else{
+                                                                      customAnimatedPushNavigation(
+                                                                          context, ApplyJobPersonInfo());
+                                                                    }
+
                                                                   },
                                                                 )),
                                                           ],
@@ -152,7 +199,8 @@ class JobDetailsScreenState extends State<JobDetailsScreen> {
                     )
 
 
-                  )),
+                )),
+          ),
 
           ),
         ),

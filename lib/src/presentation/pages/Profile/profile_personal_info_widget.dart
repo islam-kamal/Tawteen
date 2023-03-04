@@ -1,14 +1,15 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
-class PersonalInfoWidget extends StatefulWidget{
+import 'package:code/src/presentation/widgets/unathorized_user_widget.dart';
+class ProfilePersonalInfoWidget extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return PersonalInfoWidgetState();
+    return ProfilePersonalInfoWidgetState();
   }
 
 }
-class PersonalInfoWidgetState extends State<PersonalInfoWidget> {
+class ProfilePersonalInfoWidgetState extends State<ProfilePersonalInfoWidget> {
 
 
   @override
@@ -37,7 +38,7 @@ class PersonalInfoWidgetState extends State<PersonalInfoWidget> {
                         topRight: Radius.circular(Shared.width * 0.08),
                         topLeft: Radius.circular(Shared.width * 0.08)),
                   ),
-                  child:  Scrollbar(
+                  child:  Shared.vistor_value == 'visitor' ? UnAuthorizedUserWidget():Scrollbar(
                       child: SingleChildScrollView(
                           child: Column(
                             children: [
@@ -153,7 +154,7 @@ class PersonalInfoWidgetState extends State<PersonalInfoWidget> {
                                   width: Shared.width,
                                   height: Shared.width * 0.13,
                                   onPress: () {
-                                    customAnimatedPushNavigation(context, ContactInfoWidget());
+                                    customAnimatedPushNavigation(context, ProfileContactInfoWidget());
                                   },
                                 )),
                           ],

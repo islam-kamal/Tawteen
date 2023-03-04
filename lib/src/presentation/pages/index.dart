@@ -83,7 +83,7 @@ class _State extends State<Index> {
 */
 
 import 'package:code/src/Base/common/file_export.dart';
-import 'package:code/src/presentation/pages/Profile/personal_info_widget.dart';
+import 'package:code/src/presentation/pages/Profile/profile_personal_info_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -165,7 +165,7 @@ var indexKey = GlobalKey();
   }
 
   List<Widget> _buildScreens() {
-    return [HomeScreen(), PersonalInfoWidget(), SettingsScreen()];
+    return [HomeScreen(), ProfilePersonalInfoWidget(), SettingsScreen()];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {

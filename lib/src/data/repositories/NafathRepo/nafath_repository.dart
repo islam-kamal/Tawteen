@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/AuthenticationModel/sigin_model.dart';
 import 'package:code/src/data/models/NafathModel/applicant_data_model.dart';
 import 'package:code/src/data/models/NafathModel/applicant_exist_model.dart';
 import 'package:code/src/data/models/NafathModel/nafath_check_status_model.dart';
 import 'package:code/src/data/models/NafathModel/nafath_rquest_model.dart';
+import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 class NafathRepository{
 
@@ -56,6 +61,31 @@ class NafathRepository{
         ApplicantDataModel(),
         baseUrl + "api/v1/applicants/by-IdNo/${nationalId}",
         headers: headers  );
+  }
+
+  Future<SignInModel?> signIn() async {
+  Map<String, String> headers = {
+      'lang': translator.activeLanguageCode,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+
+    };
+    print("CachingKey.EMAIL) : ${await sharedPreferenceManager.readString(CachingKey.EMAIL)}");
+    print("CachingKey.EMAIL) : ${await sharedPreferenceManager.readString(CachingKey.EMAIL)}Password@1223");
+ /*   FormData body = new FormData.fromMap({
+      'username': await sharedPreferenceManager.readString(CachingKey.EMAIL),
+      'password': "${await sharedPreferenceManager.readString(CachingKey.EMAIL)}Password@1223"
+    });*/
+
+    return NetworkUtil.internal().post(
+        SignInModel(),
+        baseUrl + signinUrl,
+        headers: headers ,
+        body: jsonEncode({
+          'username': await sharedPreferenceManager.readString(CachingKey.EMAIL),
+          'password': "${await sharedPreferenceManager.readString(CachingKey.EMAIL)}Password@1223"
+        })
+    );
   }
 }
 

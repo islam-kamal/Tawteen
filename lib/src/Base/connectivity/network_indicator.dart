@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
-
 class NetworkIndicator extends StatefulWidget {
   final Widget? child;
   const NetworkIndicator({this.child});
@@ -66,11 +65,14 @@ class _NetworkIndicatorState extends State<NetworkIndicator> {
                     vertical: _height * 0.02),
                 child: Builder(
                     builder: (context) => InkWell(
-                          onTap: () {},
+                          onTap: () {
 
+                          },
                           child: Container(
-                              color: kBlackColor,
 
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                color: kGreenColor,),
                               alignment: Alignment.center,
                               child: const Text(
                                 "تحديث الصفحة",

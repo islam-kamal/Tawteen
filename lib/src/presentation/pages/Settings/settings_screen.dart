@@ -88,6 +88,7 @@ class SettingsScreenState extends State<SettingsScreen> {
           ),
           title: klogout.tr(),
           function: () {
+
             customAnimatedPushNavigation(
                 navigatorKey.currentContext!, SiginScreen());
           }),
@@ -109,7 +110,7 @@ class SettingsScreenState extends State<SettingsScreen> {
               color: kHaviyGreenColor,
               child: Column(
                 children: [
-                  welcome(),
+                  Shared.vistor_value == 'visitor' ?Container():       welcome(),
                   Container(
                       height: Shared.height,
                       padding: EdgeInsets.only(top: 10),

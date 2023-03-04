@@ -1,7 +1,7 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/pages/Jobs/Apply_Jobs/apply_job_attachments.dart';
 import 'package:code/src/presentation/pages/Jobs/Apply_Jobs/apply_job_person_info.dart';
-import 'package:code/src/presentation/pages/Profile/educational_data_widget.dart';
+import 'package:code/src/presentation/pages/Profile/profile_educational_data_widget.dart';
 
 ApplyJobIndicator({
   BuildContext? context,

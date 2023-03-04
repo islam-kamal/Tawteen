@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:code/src/domain/entities/experience_entity.dart';
 import 'package:code/src/domain/entities/nafath_info_entity.dart';
+import 'package:code/src/domain/entities/user_entity.dart';
 import 'package:get/get.dart';
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/Base/common/theme.dart';
@@ -38,28 +39,22 @@ class Shared {
     },
   );
 
-  static void showSnackBarView({bool? title_status, String? message, String? backend_message,
-    Color? backgroundColor, bool? success_icon}) {
-/*    Get.snackbar(
-        translator.translate(title_status! ? kcongratulations: kfault ),
-        backend_message?? translator.translate(message!),
-        colorText: Colors.white,
-        backgroundColor: backgroundColor ?? kRedColor,
-        icon: success_icon! ? Image.asset(
-          ImageAssets.congratulations,
-          width: 30,
-          height: 30,
-          color: kWhiteColor,
-        )
-            : Image.asset(
-          ImageAssets.error,
-          width: 30,
-          height: 30,
-          color: kWhiteColor,
-        ),
-    );*/
+  static void showSnackBarView({ String? message, String? backend_message,
+    bool? error_status,  bool? sigin_button}) {
+
     var snackBar = SnackBar(
-        content: Text( backend_message?? translator.translate(message!)));
+        content: Text( backend_message?? translator.translate(message!),
+          style: TextStyle(color: error_status!? kWhiteColor :kGreenColor,),
+        ),
+      backgroundColor: error_status? kRedColor :kWhiteColor,
+      action:  sigin_button!? SnackBarAction(
+        label: translator.translate(ksignin),
+        textColor: kBlackColor,
+        onPressed: () {
+          customAnimatedPushNavigation(navigatorKey.currentContext!, SiginScreen());
+        },
+      ): null,
+    );
     // Step 3
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(snackBar);
   }
@@ -79,5 +74,7 @@ class Shared {
   static List<ExperienceEntity> user_experinces = [];
   static List<String> applicant_skills = [];
   static NafathInfoEntity? nafathInfoEntity ;
-
+ // static UserEntity? userEntity;
+  static String? vistor_value;
 }
+

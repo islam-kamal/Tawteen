@@ -72,6 +72,7 @@ dependencies:
   convert:
   file_picker: ^5.2.5
   email_validator: ^2.0.1
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:

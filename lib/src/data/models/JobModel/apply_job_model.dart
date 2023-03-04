@@ -1,12 +1,13 @@
 import 'package:code/src/Base/common/file_export.dart';
 
+
 class ApplyJobModel extends BaseMappable{
   int? httpStatusCode;
   bool? succeeded;
   String? message;
-  Null? errors;
-  Null? modelErrors;
-  Null? data;
+  String? errors;
+  String? modelErrors;
+  int? data;
 
   ApplyJobModel(
       {this.httpStatusCode,
@@ -17,33 +18,34 @@ class ApplyJobModel extends BaseMappable{
         this.data});
 
   ApplyJobModel.fromJson(Map<String, dynamic> json) {
-    httpStatusCode = json['HttpStatusCode'];
-    succeeded = json['Succeeded'];
-    message = json['Message'];
-    errors = json['Errors'];
-    modelErrors = json['ModelErrors'];
-    data = json['Data'];
+    httpStatusCode = json['httpStatusCode'];
+    succeeded = json['succeeded'];
+    message = json['message'];
+    errors = json['errors'];
+    modelErrors = json['modelErrors'];
+    data = json['data'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['HttpStatusCode'] = this.httpStatusCode;
-    data['Succeeded'] = this.succeeded;
-    data['Message'] = this.message;
-    data['Errors'] = this.errors;
-    data['ModelErrors'] = this.modelErrors;
-    data['Data'] = this.data;
+    data['httpStatusCode'] = this.httpStatusCode;
+    data['succeeded'] = this.succeeded;
+    data['message'] = this.message;
+    data['errors'] = this.errors;
+    data['modelErrors'] = this.modelErrors;
+    data['data'] = this.data;
     return data;
   }
 
   @override
   Mappable fromJson(Map<String, dynamic> json) {
-    httpStatusCode = json['HttpStatusCode'];
-    succeeded = json['Succeeded'];
-    message = json['Message'];
-    errors = json['Errors'];
-    modelErrors = json['ModelErrors'];
-    data = json['Data'];
-    return ApplyJobModel(succeeded: succeeded,modelErrors: modelErrors,message: message,data: data,errors: errors,httpStatusCode: httpStatusCode);
+    httpStatusCode = json['httpStatusCode'];
+    succeeded = json['succeeded'];
+    message = json['message'];
+    errors = json['errors'];
+    modelErrors = json['modelErrors'];
+    data = json['data'];
+    return ApplyJobModel(httpStatusCode: httpStatusCode,succeeded: succeeded,message: message,errors:errors
+        ,modelErrors: modelErrors,data: data);
   }
 }

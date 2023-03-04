@@ -14,50 +14,6 @@ class PreviousJobsScreen extends StatefulWidget {
 }
 
 class PreviousJobsScreenState extends State<PreviousJobsScreen> {
-  List<JobEntity?> jobs_list = [
-    JobEntity(
-        image: ImageAssets.company1,
-        title: "مصمم جرافيك خبرة 5 سنوات",
-        publish_date: "26/1/2023",
-        end_date: "26/2/2023",
-        status: "Pending"),
-    JobEntity(
-        image: ImageAssets.company2,
-        title: "مصمم جرافيك",
-        publish_date: "26/1/2023",
-        end_date: "26/2/2023",
-        status: "Cancelled"),
-    JobEntity(
-        image: ImageAssets.company3,
-        title: "Graphic Designer",
-        publish_date: "26/1/2023",
-        end_date: "26/2/2023",
-        status: "Accept"),
-    JobEntity(
-        image: ImageAssets.company4,
-        title: "Senior Graphic Designer",
-        publish_date: "6/5/2023",
-        end_date: "26/9/2023",
-        status: "Pending"),
-    JobEntity(
-        image: ImageAssets.company5,
-        title: "مصمم جرافيك خبرة 5 سنوات",
-        publish_date: "26/3/2023",
-        end_date: "2/4/2023",
-        status: "Accept"),
-    JobEntity(
-        image: ImageAssets.company5,
-        title: "مصمم جرافيك خبرة 5 سنوات",
-        publish_date: "26/3/2023",
-        end_date: "2/4/2023",
-        status: "Cancelled"),
-    JobEntity(
-        image: ImageAssets.company5,
-        title: "مصمم جرافيك خبرة 5 سنوات",
-        publish_date: "26/3/2023",
-        end_date: "2/4/2023",
-        status: "Cancelled"),
-  ];
 
   @override
   void initState() {
@@ -88,7 +44,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                   leading:translator.activeLanguageCode == 'ar'
                       ? IconButton(
                     onPressed: () {
-                     Navigator.pop(context);
+                      customAnimatedPushNavigation(context, HomeScreen());
                     },
                     icon: translator.locale.languageCode == "en"
                         ? Icon(
@@ -102,7 +58,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                   )
                       : IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      customAnimatedPushNavigation(context, HomeScreen());
 
                     },
                     icon: translator.locale.languageCode == "ar"
@@ -160,7 +116,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                                 builder: (context,state){
                                   if(state is Loading){
                                     return Padding(
-                                      padding: EdgeInsets.only(top: Shared.width * 0.4, ),
+                                      padding: EdgeInsets.only(top: Shared.width * 0.8, ),
                                       child: Center(
                                         child: Shared.spinkit,
                                       ),
@@ -173,7 +129,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                                           switch (snapshot.connectionState) {
                                             case ConnectionState.none:
                                               return Padding(
-                                                padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                                padding: EdgeInsets.only(top:Shared.width * 0.8, ),
                                                 child: Center(
                                                     child: Shared.spinkit
                                                 ),
@@ -182,7 +138,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                                               return Text('');
                                             case ConnectionState.waiting:
                                               return Padding(
-                                                padding: EdgeInsets.only(top:Shared.width * 0.4, ),
+                                                padding: EdgeInsets.only(top:Shared.width * 0.8, ),
                                                 child: Center(
                                                     child: Shared.spinkit
                                                 ),
@@ -202,19 +158,21 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                                     return Padding(
                                       padding: EdgeInsets.symmetric(
                                           vertical: Shared.width * 0.02,
-                                          horizontal: Shared.width * 0.04),
+                                          horizontal: Shared.width * 0.01),
                                       child: previous_jobs_element(
                                           previous_job: snapshot.data!.data![index]),
                                     );
                                   });
                                               }
                                               else
-                                                return no_data_widget(context: context);
+                                                return no_data_widget(context: context,
+                                                center: true);
                                           }
                                         });
 
                                   }else if(state is ErrorLoading){
-                                    return no_data_widget(context: context);
+                                    return no_data_widget(context: context,
+                                        center: true);
                                   }
                                   return Container();
                                 },
@@ -234,7 +192,13 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
   Widget previous_jobs_element({PreviousJob? previous_job}) {
     return InkWell(
       onTap: () {
-        customAnimatedPushNavigation(context, JobDetailsScreen());
+        customAnimatedPushNavigation(context, JobDetailsScreen(
+          job_id:previous_job!.jobId!.toString() ,
+           screen: PreviousJobsScreen(),
+          show_cancellation_status: true,
+          previous_job_status: previous_job.status == 8  || previous_job.status == 10? true : false,
+
+        ));
       },
       child: Stack(
         children: [
@@ -271,7 +235,7 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
                     child: Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: Shared.width * 0.05,
-                            horizontal: Shared.width * 0.04),
+                            horizontal: Shared.width * 0.01),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -336,7 +300,6 @@ class PreviousJobsScreenState extends State<PreviousJobsScreen> {
               left: translator.activeLanguageCode == 'ar' ? 0 : null,
               right: translator.activeLanguageCode == 'ar' ? null : 0,
               child: Container(
-               // width: Shared.width * 0.25,
                 padding: EdgeInsets.symmetric(vertical: 5,horizontal: Shared.width * 0.03),
                 decoration: BoxDecoration(
                     color: status_color(previous_job.status ).color,

@@ -50,13 +50,12 @@ export 'package:code/src/Base/common/shared.dart';
 export 'package:code/src/Base/common/theme.dart';
 export 'package:code/src/Base/common/image_manger.dart';
 export 'package:code/src/presentation/widgets/custom_dropdown.dart';
-export 'package:code/src/presentation/pages/Profile/contact_info_widget.dart';
+export 'package:code/src/presentation/pages/Profile/profile_contact_info_widget.dart';
 export 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
 export 'package:code/src/presentation/widgets/apply_job_indicator.dart';
 export 'package:code/src/presentation/pages/Jobs/Apply_Jobs/apply_job_review_job_request.dart';
 export 'package:code/src/presentation/pages/thanks/thanks_screen.dart';
 
-export 'package:code/src/presentation/pages/Available_jobs/available_jobs.dart';
 export 'package:code/src/domain/entities/course_entity.dart';
 export 'package:code/src/presentation/pages/Courses/course_details_screen.dart';
 export 'package:flutter_share/flutter_share.dart';
@@ -71,4 +70,3 @@ export 'package:code/src/data/repositories/AuthenticationRepo/authentication_rep
 export 'package:code/src/domain/entities/search_specfic_jobs_entity.dart';
 export 'package:code/src/presentation/widgets/no_data.dart';
 export 'package:code/src/Base/common/config.dart';
-export 'package:code/src/presentation/pages/Previous_Jobs/previous_jobs_screen.dart';

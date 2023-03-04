@@ -7,6 +7,7 @@ class ThanksScreen extends StatelessWidget {
     return Scaffold(
 
       backgroundColor: kBlackColor,
+        appBar: AppBarWidget.appBarWidget(context: context, icon: false),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: Shared.width * 0.4,horizontal: Shared.width * 0.2),
         child: ListView(
@@ -32,7 +33,7 @@ class ThanksScreen extends StatelessWidget {
             ),
             OutlinedButton(
               onPressed: () {
-                customAnimatedPushNavigation(context, Index());
+                customAnimatedPushNavigation(context, HomeScreen());
               },
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.1),

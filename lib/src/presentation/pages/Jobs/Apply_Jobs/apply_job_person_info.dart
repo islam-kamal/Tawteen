@@ -1,5 +1,6 @@
 import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/pages/Jobs/Apply_Jobs/apply_job_attachments.dart';
+import 'package:code/src/presentation/widgets/Dropdown/custom_cities_dropdown.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_province_dropdown.dart';
 
 class ApplyJobPersonInfo extends StatefulWidget{
@@ -60,7 +61,8 @@ class ApplyJobPersonInfoState extends State<ApplyJobPersonInfo>{
                                   Container(
                                     width: Shared.width,
                                     child: CustomTextField(
-                                      hint: kfirstName.tr(),
+                                      hint:translator.activeLanguageCode == 'ar'?
+                                      Shared.nafathInfoEntity!.arFirst!.toString() :  Shared.nafathInfoEntity!.enFirst!.toString() ,
                                       alignment: translator.activeLanguageCode == 'ar'
                                           ? TextAlign.right
                                           : TextAlign.left,
@@ -77,7 +79,9 @@ class ApplyJobPersonInfoState extends State<ApplyJobPersonInfo>{
                                   Container(
                                     width: Shared.width,
                                     child: CustomTextField(
-                                      hint: klastname.tr(),
+                                      hint:translator.activeLanguageCode == 'ar'?
+                                      Shared.nafathInfoEntity!.arFather!.toString() :  Shared.nafathInfoEntity!.enFather!.toString() ,
+
                                       alignment: translator.activeLanguageCode == 'ar'
                                           ? TextAlign.right
                                           : TextAlign.left,
@@ -94,13 +98,13 @@ class ApplyJobPersonInfoState extends State<ApplyJobPersonInfo>{
                                   Container(
                                     width: Shared.width,
                                     child: CustomTextField(
-                                      hint: kmobilenumber.tr(),
+                                      hint: Shared.nafathInfoEntity!.phone.toString(),
                                       alignment: translator.activeLanguageCode == 'ar'
                                           ? TextAlign.right
                                           : TextAlign.left,
                                       isMobile: true,
                                       isEditable: false,
-                                      errorMessage: kEnter_the_identity.tr(),
+                                      errorMessage: kEnter_the_phone_correctly.tr(),
                                     ),
                                   ),
                                   Padding(
@@ -112,13 +116,13 @@ class ApplyJobPersonInfoState extends State<ApplyJobPersonInfo>{
                                   Container(
                                     width: Shared.width ,
                                     child: CustomTextField(
-                                      hint: kemail.tr(),
+                                      hint: Shared.nafathInfoEntity!.email.toString(),
                                       alignment: translator.activeLanguageCode == 'ar'
                                           ? TextAlign.right
                                           : TextAlign.left,
                                       isEmail: true,
                                       isEditable: false,
-                                      errorMessage: kEnter_the_identity.tr(),
+                                      errorMessage: kEnter_email_correctly.tr(),
                                     ),
                                   ),
                                   Padding(
@@ -127,8 +131,9 @@ class ApplyJobPersonInfoState extends State<ApplyJobPersonInfo>{
                                         text: kcity.tr(),
                                         textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                                   ),
-                                  CustomProvinceDropDown(
+                                  CustomCitiesDropDown(
                                     hint: kcity.tr(),
+                                    select_city_status: true,
                                   ),
                                   Padding(
                                       padding: EdgeInsets.symmetric(vertical: Shared.width * 0.1),

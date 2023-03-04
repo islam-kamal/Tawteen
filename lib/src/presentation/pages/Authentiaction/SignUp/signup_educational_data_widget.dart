@@ -2,24 +2,25 @@ import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/domain/entities/experience_entity.dart';
 import 'package:code/src/presentation/bloc/Authentication_Bloc/SignupBloc/sign_up_bloc.dart';
 import 'package:code/src/presentation/bloc/Experience_Bloc/experience_bloc.dart';
-import 'package:code/src/presentation/pages/Profile/personal_info_widget.dart';
+import 'package:code/src/presentation/pages/Profile/profile_personal_info_widget.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_eduction_majors_dropdown.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_eductional_level.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_job_titles_dropdown.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_skills_dropdown.dart';
 import 'package:code/src/presentation/widgets/applicant_experience_widget.dart';
 import 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
+import 'package:code/src/presentation/widgets/signup_pages_indicator.dart';
 import 'package:provider/provider.dart';
 
-class EductionalDataWidget extends StatefulWidget {
+class SignUpEductionalDataWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return EductionalDataWidgetState();
+    return SignUpEductionalDataWidgetState();
   }
 }
 
-class EductionalDataWidgetState extends State<EductionalDataWidget> {
+class SignUpEductionalDataWidgetState extends State<SignUpEductionalDataWidget> {
   String _currText = '';
 
   bool? hasExperience = false;
@@ -56,9 +57,16 @@ class EductionalDataWidgetState extends State<EductionalDataWidget> {
                           Shared.showLoadingDialog(context: context);
                         }else if(state is Done){
                           Shared.dismissDialog(context: context);
+                          customAnimatedPushNavigation(context, SiginScreen());
                        print("******** signUpBloc Done");
 
                         }else if(state is ErrorLoading){
+                          Shared.dismissDialog(context: context);
+                          Shared.showSnackBarView(
+                              error_status: true,
+                              backend_message:  state.message!,
+                              sigin_button: false
+                          );
                           print("******** signUpBloc ErrorLoading");
                         }
                       },
@@ -69,7 +77,7 @@ class EductionalDataWidgetState extends State<EductionalDataWidget> {
                                   Padding(
                                     padding:
                                     EdgeInsets.symmetric(vertical: Shared.width * 0.06),
-                                    child: profilePagesIndictor(
+                                    child: SignUpPagesIndictor(
                                         context: context,
                                         isPersonalData: true,
                                         isContactInfo: true,

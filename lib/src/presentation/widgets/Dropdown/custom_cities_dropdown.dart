@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 
 class CustomCitiesDropDown extends StatefulWidget {
   String? hint;
-  String? route;
-  CustomCitiesDropDown({this.hint,this.route});
+  bool? select_city_status;
+  CustomCitiesDropDown({this.hint,this.select_city_status = false});
   @override
   _CustomCitiesDropDownState createState() => _CustomCitiesDropDownState();
 }
@@ -32,10 +32,16 @@ class _CustomCitiesDropDownState extends State<CustomCitiesDropDown> {
           compareFn: (i, s) => i.isEqual(s),
           onChanged: (city){
             sharedPreferenceManager.writeData(CachingKey.CITY_ID, city!.id);
+            sharedPreferenceManager.writeData(CachingKey.CITY_NAME_AR, city.name);
+            sharedPreferenceManager.writeData(CachingKey.CITY_NAME_En, city.nameEn);
+
           },
+          enabled: widget.select_city_status! ?  false : true,
           dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
-              hintText: widget.hint!,
+              hintText: widget.select_city_status! ?
+                  translator.activeLanguageCode == 'ar' ? Shared.nafathInfoEntity!.city_name_ar :  Shared.nafathInfoEntity!.city_name_en
+                      : widget.hint!,
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: kInactiveColor),

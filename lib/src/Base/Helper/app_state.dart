@@ -1,6 +1,10 @@
 
 
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/data/models/AuthenticationModel/sigin_model.dart';
+import 'package:code/src/data/models/NafathModel/applicant_data_model.dart';
+import 'package:code/src/data/models/NafathModel/applicant_exist_model.dart';
+import 'package:code/src/data/models/NafathModel/nafath_check_status_model.dart';
 import 'package:code/src/data/models/NafathModel/nafath_rquest_model.dart';
 
 abstract class AppState {
@@ -22,6 +26,7 @@ class Loading extends AppState{
     // TODO: implement toString
   }
 }
+
 class Done extends AppState{
   Mappable? model;
   final String? indicator;
@@ -51,6 +56,59 @@ class SendNafthRequestDone extends AppState{
   }
 
 }
+class NafathCheckStatusDone extends AppState{
+  NafathCheckStatusModel? model;
+  final String? indicator;
+  final String? nationalId;
+  NafathCheckStatusDone({this.model , this.indicator,this.nationalId});
+  @override
+  String toString() {
+    return indicator!;
+
+    // TODO: implement toString
+  }
+
+}
+class CheckApplicantExistDone extends AppState{
+  ApplicantExistModel? model;
+  final String? indicator;
+  final String? nationalId;
+  CheckApplicantExistDone({this.model , this.indicator,this.nationalId});
+  @override
+  String toString() {
+    return indicator!;
+
+    // TODO: implement toString
+  }
+
+}
+class GetApplicantDataDone extends AppState{
+  ApplicantDataModel? model;
+  final String? indicator;
+  final String? nationalId;
+  GetApplicantDataDone({this.model , this.indicator,this.nationalId});
+  @override
+  String toString() {
+    return indicator!;
+
+    // TODO: implement toString
+  }
+
+}
+class SiginDone extends AppState{
+  SignInModel? model;
+  final String? indicator;
+  final String? nationalId;
+  SiginDone({this.model , this.indicator,this.nationalId});
+  @override
+  String toString() {
+    return indicator!;
+
+    // TODO: implement toString
+  }
+
+}
+
 class ErrorLoading extends AppState{
   Mappable? model;
   List<dynamic>? general_model;
@@ -64,13 +122,13 @@ class ErrorLoading extends AppState{
   }
 
 }
-class ErrorLoadingProduct extends AppState{
+class ErrorCheckApplicantExist extends AppState{
   Mappable? model;
   List<dynamic>? general_model;
   final String? sku;
   String? indicator;
   String? message;
-  ErrorLoadingProduct({this.sku='',this.model,this.message,this.indicator,this.general_model});
+  ErrorCheckApplicantExist({this.sku='',this.model,this.message,this.indicator,this.general_model});
   @override
   String toString() {
     return indicator!;
@@ -78,13 +136,13 @@ class ErrorLoadingProduct extends AppState{
   }
 
 }
-class ErrorLoadingWishListToCart extends AppState{
+class ErrorSendNafthRequest extends AppState{
   Mappable? model;
   List<dynamic>? general_model;
   final String? id;
   String? indicator;
   String? message;
-  ErrorLoadingWishListToCart({this.id='',this.model,this.message,this.indicator,this.general_model});
+  ErrorSendNafthRequest({this.id='',this.model,this.message,this.indicator,this.general_model});
   @override
   String toString() {
     return indicator!;
@@ -92,6 +150,48 @@ class ErrorLoadingWishListToCart extends AppState{
   }
 
 }
+class ErrorNafathCheckStatus extends AppState{
+  Mappable? model;
+  List<dynamic>? general_model;
+  final String? id;
+  String? indicator;
+  String? message;
+  ErrorNafathCheckStatus({this.id='',this.model,this.message,this.indicator,this.general_model});
+  @override
+  String toString() {
+    return indicator!;
+    // TODO: implement toString
+  }
+
+}
+class ErrorGetApplicantData extends AppState{
+  Mappable? model;
+  List<dynamic>? general_model;
+  final String? id;
+  String? indicator;
+  String? message;
+  ErrorGetApplicantData({this.id='',this.model,this.message,this.indicator,this.general_model});
+  @override
+  String toString() {
+    return indicator!;
+    // TODO: implement toString
+  }
+
+}
+class ErrorSigin extends AppState{
+  Mappable? model;
+  List<dynamic>? general_model;
+  final String? id;
+  String? indicator;
+  String? message;
+  ErrorSigin({this.id='',this.model,this.message,this.indicator,this.general_model});
+  @override
+  String toString() {
+    return indicator!;
+    // TODO: implement toString
+  }
+}
+
 class EmptyField extends AppState{
   var value;
   EmptyField({this.value= 'بيانات الطلب غير مكتملة '});

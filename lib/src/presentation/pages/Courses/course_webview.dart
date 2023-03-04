@@ -50,7 +50,6 @@ class _CourseWebViewState extends State<CourseWebView> {
             _webController = controller;
             _webController!.loadUrl(
               "https://pub.dev/packages/webview_flutter_wkwebview"
-              //  new Uri.dataFromString("<a href="">Click to win a free prize!</a>", mimeType: 'text/html').toString()
             );
           },
           onPageFinished: (page) async {

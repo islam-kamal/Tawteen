@@ -14,65 +14,7 @@ class AvailableJobsScreen extends StatefulWidget {
 }
 
 class AvailableJobsScreenState extends State<AvailableJobsScreen> {
-/*
-  ScrollController? _controller;
-  int? _page = 1;
-  bool? _hasNextPage = true;
-  bool? _isFirstLoadRunning = false;
-  bool? _isLoadMoreRunning = false;
-  List? _contact_orders = [];
 
-  void _firstLoad() async {
-    setState(() {
-      _isFirstLoadRunning = true;
-    });
-    try {
-      getAllJobsBloc.add(GetAllJobsEvent(
-        pageSize: 1.toString()
-      ));
-    } catch (err) {
-    }
-    setState(() {
-      _isFirstLoadRunning = false;
-    });
-  }
-  void _loadMore() async {
-    if (_hasNextPage == true &&
-        _isFirstLoadRunning == false &&
-        _isLoadMoreRunning == false &&
-        _controller!.position.extentAfter < 300) {
-      setState(() {
-        _isLoadMoreRunning = true; // Display a progress indicator at the bottom
-      });
-      _page = _page! + 1; // Increase _page by 1
-      try {
-        var res = await OrdersRepository.getContractOrders(
-            contractID: widget.contractID,
-            branch_id:       Shared.contract_orders_selected_branch_id,
-            start: widget.start_date,
-            end: widget.end_date,
-            pageNumber: _page
-        );
-        final List fetched_contact_orders= res.data!;
-        if (fetched_contact_orders.length > 0) {
-          setState(() {
-            _contact_orders!.addAll(fetched_contact_orders);
-          });
-        } else {
-          setState(() {
-            _hasNextPage = false;
-          });
-
-        }
-      } catch (err) {
-      }
-      setState(() {
-        _isLoadMoreRunning = false;
-      });
-    }
-  }
-
-*/
 
   @override
   void initState() {
@@ -158,12 +100,14 @@ class AvailableJobsScreenState extends State<AvailableJobsScreen> {
                                         );
                                       }
                                       else
-                                        return no_data_widget(context: context);
+                                        return no_data_widget(context: context,
+                                            center: true);
                                   }
                                 });
 
                           }else if(state is ErrorLoading){
-                            return no_data_widget(context: context);
+                            return no_data_widget(context: context,
+                                center: true);
                           }
                           return Container();
                         },

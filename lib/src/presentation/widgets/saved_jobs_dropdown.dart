@@ -1,7 +1,8 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:code/src/presentation/pages/Initiatives/Previous_Initatives/previous_initatives_screen.dart';
+import 'package:code/src/presentation/pages/Jobs/Previous_Jobs/previous_jobs_screen.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-import '../pages/Previous_Jobs/previous_jobs_screen.dart';
 class SavedJobsDropDown extends StatefulWidget {
   const SavedJobsDropDown({Key? key}) : super(key: key);
 
@@ -12,7 +13,7 @@ class SavedJobsDropDown extends StatefulWidget {
 class _SavedJobsDropDownState extends State<SavedJobsDropDown> {
   var items = [
     ksubmittedjobs.tr(),
-
+    kpreviousinitiatives.tr()
   ];
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,13 @@ class _SavedJobsDropDownState extends State<SavedJobsDropDown> {
               );
             }).toList(),
             onChanged: (value) {
-              customAnimatedPushNavigation(context, PreviousJobsScreen());
+
+              if(value == ksubmittedjobs.tr()){
+                customAnimatedPushNavigation(context, PreviousJobsScreen());
+              }else{
+                customAnimatedPushNavigation(context, PreviousIntativesScreen());
+              }
+
             },
             itemHeight: 48,
             itemPadding: const EdgeInsets.only(left: 16, right: 16),

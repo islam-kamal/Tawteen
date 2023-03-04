@@ -1,11 +1,11 @@
 import 'package:code/src/Base/common/file_export.dart';
-import 'package:code/src/presentation/pages/Profile/educational_data_widget.dart';
+import 'package:code/src/presentation/pages/Profile/profile_educational_data_widget.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_cities_dropdown.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_province_dropdown.dart';
 import 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
 import 'package:email_validator/email_validator.dart';
 
-class ContactInfoWidget extends StatelessWidget {
+class ProfileContactInfoWidget extends StatelessWidget {
   var phone_controller = TextEditingController();
   var email_controller = TextEditingController();
   final signupFormKey = GlobalKey<FormState>();
@@ -134,23 +134,12 @@ class ContactInfoWidget extends StatelessWidget {
                                               height: Shared.width * 0.13,
                                               onPress: () {
                                                 if (signupFormKey.currentState!
-                                                        .validate() &&
-                                                    validateInputs(context,
-                                                        ctx: context)) {
-                                                  sharedPreferenceManager
-                                                      .writeData(
-                                                          CachingKey
-                                                              .MOBILE_NUMBER,
-                                                          phone_controller
-                                                              .text);
-                                                  sharedPreferenceManager
-                                                      .writeData(
-                                                          CachingKey.EMAIL,
-                                                          email_controller
-                                                              .text);
+                                                        .validate() && validateInputs(context, ctx: context)) {
+                                                  sharedPreferenceManager.writeData(CachingKey.MOBILE_NUMBER, phone_controller.text);
+                                                  sharedPreferenceManager.writeData(CachingKey.EMAIL, email_controller.text);
                                                   customAnimatedPushNavigation(
                                                       context,
-                                                      EductionalDataWidget());
+                                                      ProfileEductionalDataWidget());
                                                 }
                                               },
                                             )),
@@ -171,10 +160,10 @@ class ContactInfoWidget extends StatelessWidget {
       {var scaffoldKey, required var ctx}) {
     if (!EmailValidator.validate(email_controller.text)) {
       Shared.showSnackBarView(
-          title_status: false,
+          error_status: true,
           message: kEnter_email_correctly,
-          backgroundColor: kRedColor,
-          success_icon: false);
+          sigin_button: false
+          );
       return false;
     }
 

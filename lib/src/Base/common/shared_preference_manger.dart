@@ -66,6 +66,8 @@ class CachingKey extends Enum<String> {
   static const CachingKey EDUCTIONAL_LEVEL_ID= const CachingKey('EDUCTIONAL_LEVEL_ID');
   static const CachingKey EDUCTION_MAJOR_ID= const CachingKey('EDUCTION_MAJOR_ID');
   static const CachingKey CITY_ID = const CachingKey('CITY_ID');
+  static const CachingKey CITY_NAME_AR = const CachingKey('CITY_NAME');
+  static const CachingKey CITY_NAME_En = const CachingKey('CITY_NAME');
   static const CachingKey PROVINCE_ID= const CachingKey('PROVINCE_ID');
   static const CachingKey SKILLS_ID= const CachingKey('SKILLS_ID');
   static const CachingKey JOB_ID= const CachingKey('JOB_ID');
@@ -114,7 +116,7 @@ class CachingKey extends Enum<String> {
   static const CachingKey DobG = const CachingKey('DobG');
   static const CachingKey DobH = const CachingKey('DobH');
   static const CachingKey status = const CachingKey('status');
-
+  static const CachingKey INITATIVES_ID= const CachingKey('INITATIVES_ID');
 
 }
 

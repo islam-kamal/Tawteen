@@ -25,7 +25,11 @@ class NafathInfoEntity {
   String? dobG;
   int? dobH;
   String? status;
-
+  String? email;
+  String? phone;
+  String? city_id;
+  String? city_name_ar;
+  String? city_name_en;
   NafathInfoEntity({this.id,
     this.idVersion,
     this.arFirst,
@@ -51,5 +55,10 @@ class NafathInfoEntity {
     this.enNationality,
     this.dobG,
     this.dobH,
+    this.city_id,
+    this.city_name_ar,
+    this.city_name_en,
+    this.email,
+    this.phone,
     this.status});
 }

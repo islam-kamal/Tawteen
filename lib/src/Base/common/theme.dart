@@ -4,20 +4,20 @@ import 'package:google_fonts/google_fonts.dart';
 double defaultMargin = 24.0;
 double defaultRadius = 10.0;
 
-Color kPrimaryColor = const Color(0xFF6D57A1);
-Color kBlackColor = const Color(0xFF2A2A2A);
-Color kWhiteColor = const Color(0xffFFFFFF);
-Color kGreyColor = const Color(0xff9698A9);
-Color kGreenColor = const Color(0xFF2CD889);
-Color kHaviyGreenColor = const Color(0xFF26CC80);
-Color kBlueColor = const Color(0xffe3fcff);
-Color kRedColor = const Color(0xFFFC1414);
-Color kBackgroundColor = const Color(0xFFF8F8F8);
-Color kInactiveColor = const Color(0xFFDBDBDB);
-Color kTransparentColor = Colors.transparent;
-Color kAvailableColor = const Color(0xffE0D9FF);
-Color kUnavailableColor = const Color(0xffEBECF1);
-Color kYellowColor = const Color(0xFFF39204);
+const Color kPrimaryColor = const Color(0xFF6D57A1);
+const Color kBlackColor = const Color(0xFF2A2A2A);
+const Color kWhiteColor = const Color(0xffFFFFFF);
+const Color kGreyColor = const Color(0xff9698A9);
+const Color kGreenColor = const Color(0xFF2CD889);
+const Color kHaviyGreenColor = const Color(0xFF26CC80);
+const Color kBlueColor = const Color(0xffe3fcff);
+const Color kRedColor = const Color(0xFFFC1414);
+const Color kBackgroundColor = const Color(0xFFF8F8F8);
+const Color kInactiveColor = const Color(0xFFDBDBDB);
+const Color kTransparentColor = Colors.transparent;
+const Color kAvailableColor = const Color(0xffE0D9FF);
+const Color kUnavailableColor = const Color(0xffEBECF1);
+const Color kYellowColor = const Color(0xFFF39204);
 TextStyle blackTextStyle = GoogleFonts.poppins(
   color: kBlackColor,
 );

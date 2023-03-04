@@ -58,15 +58,15 @@ class LookForJobScreenState extends State<LookForJobScreen> {
                                   context, JobsSearchResultsScreen());
 
                             }else if(state is ErrorLoading){
+                              Shared.dismissDialog(context: context);
                               sharedPreferenceManager.removeData(CachingKey.CITY_ID);
                               sharedPreferenceManager.removeData(CachingKey.JOB_TITLE_ID);
                               sharedPreferenceManager.removeData(CachingKey.PUBLISH_START_DATE);
                               sharedPreferenceManager.removeData(CachingKey.PUBLISH_END_DATE);
                               Shared.showSnackBarView(
-                                  title_status: false,
+                                  error_status: true,
                                   backend_message:  state.message!,
-                                  backgroundColor: kRedColor,
-                                  success_icon: false
+                                  sigin_button: false
                               );
                             }
                           },
@@ -104,7 +104,6 @@ class LookForJobScreenState extends State<LookForJobScreen> {
                                 ),
                                 CustomCitiesDropDown(
                                   hint: kcity.tr(),
-                                  route: 'cities',
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(
@@ -147,18 +146,10 @@ class LookForJobScreenState extends State<LookForJobScreen> {
                                       search_jobs_bloc.add(SearchJobsEvent(
                                               searchSpecficJobsEntity:
                                               SearchSpecficJobsEntity(
-                                                jobTitleId:
-                                                await sharedPreferenceManager.readString(CachingKey.JOB_TITLE_ID),
-                                                cityId: await sharedPreferenceManager
-                                                    .readString(CachingKey.CITY_ID),
-                                                publishStartDate:
-                                                await sharedPreferenceManager
-                                                    .readString(CachingKey
-                                                    .PUBLISH_START_DATE),
-                                                publishEndDate:
-                                                await sharedPreferenceManager
-                                                    .readString(CachingKey
-                                                    .PUBLISH_END_DATE),
+                                                jobTitleId: await sharedPreferenceManager.readString(CachingKey.JOB_TITLE_ID) == 'null' ? "" : await sharedPreferenceManager.readString(CachingKey.JOB_TITLE_ID) ,
+                                                cityId: await sharedPreferenceManager.readString(CachingKey.CITY_ID) == 'null' ? "" : await sharedPreferenceManager.readString(CachingKey.CITY_ID),
+                                                publishStartDate: await sharedPreferenceManager.readString(CachingKey.PUBLISH_START_DATE) == 'null' ? "" : await sharedPreferenceManager.readString(CachingKey.PUBLISH_START_DATE),
+                                                publishEndDate: await sharedPreferenceManager.readString(CachingKey.PUBLISH_END_DATE) == 'null' ? "" : await sharedPreferenceManager.readString(CachingKey.PUBLISH_END_DATE),
                                               )));
 
                                       },

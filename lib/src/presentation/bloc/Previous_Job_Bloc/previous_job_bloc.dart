@@ -25,10 +25,7 @@ class PreviousJobBloc extends Bloc<AppEvent, AppState> {
       GetPreviousJobsEvent event, Emitter<AppState> emit) async {
     try {
       emit(Loading());
-     // var response = await jobRepository.getAllJobs();
-     var response = await previousJobRepository.getApplicantPreviousJobs().onError((error, stackTrace){
-       print("error : ${error}");
-     });
+     var response = await previousJobRepository.getApplicantPreviousJobs();
      print("PreviousJobs response : ${response}");
       if (response!.data != null) {
         _previous_jobs_subject.sink.add(response);

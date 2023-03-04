@@ -21,7 +21,7 @@ class AttachmentBloc extends Bloc<AppEvent,AppState>{
         applicationId: event.applicationId,
         applicationTypeId: event.applicationTypeId
       );
-      if(response!.httpStatusCode == 200 ){
+      if(response!.httpStatusCode == 200 || response.data!.isEmpty){
         _all_attachments_subject.sink.add(response);
         emit( Done(model: response));
       }else{

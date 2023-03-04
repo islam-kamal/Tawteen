@@ -2,7 +2,8 @@ import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/data/models/AttachmentsModel/attachment_model.dart';
 import 'package:code/src/presentation/bloc/Attachment_Bloc/attachment_bloc.dart';
 import 'package:code/src/presentation/bloc/Jobs_Bloc/apply_job_bloc.dart';
-import 'package:code/src/presentation/pages/Profile/personal_info_widget.dart';
+import 'package:code/src/presentation/pages/Profile/profile_personal_info_widget.dart';
+import 'package:code/src/presentation/widgets/Dropdown/custom_cities_dropdown.dart';
 import 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -55,10 +56,9 @@ class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
             print("ErrorLoading : ${ state.message}");
             Shared.dismissDialog(context: context);
             Shared.showSnackBarView(
-            title_status: false,
+                error_status: true,
             backend_message:  state.message,
-            backgroundColor: kRedColor,
-            success_icon: false
+                sigin_button: false
             );
             }
             },
@@ -99,7 +99,9 @@ class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
                                Container(
                                  width: Shared.width,
                                  child: CustomTextField(
-                                   hint: kfirstName.tr(),
+                                   hint:translator.activeLanguageCode == 'ar'?
+                                   "${Shared.nafathInfoEntity!.arFirst!.toString()} ${Shared.nafathInfoEntity!.arFather!.toString()}" :   "${Shared.nafathInfoEntity!.enFirst!.toString()} ${Shared.nafathInfoEntity!.enFather!.toString()}" ,
+
                                    alignment: translator.activeLanguageCode == 'ar'
                                        ? TextAlign.right
                                        : TextAlign.left,
@@ -116,13 +118,13 @@ class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
                                Container(
                                  width: Shared.width,
                                  child: CustomTextField(
-                                   hint: kmobilenumber.tr(),
+                                   hint: Shared.nafathInfoEntity!.phone.toString(),
                                    alignment: translator.activeLanguageCode == 'ar'
                                        ? TextAlign.right
                                        : TextAlign.left,
                                    isMobile: true,
                                    isEditable: false,
-                                   errorMessage: kEnter_the_identity.tr(),
+                                   errorMessage: kEnter_the_phone_correctly.tr(),
                                  ),
                                ),
                                Padding(
@@ -134,13 +136,13 @@ class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
                                Container(
                                  width: Shared.width ,
                                  child: CustomTextField(
-                                   hint: kemail.tr(),
+                                   hint: Shared.nafathInfoEntity!.email.toString(),
                                    alignment: translator.activeLanguageCode == 'ar'
                                        ? TextAlign.right
                                        : TextAlign.left,
                                    isEmail: true,
                                    isEditable: false,
-                                   errorMessage: kEnter_the_identity.tr(),
+                                   errorMessage: kEnter_email_correctly.tr(),
                                  ),
                                ),
                                Padding(
@@ -149,8 +151,9 @@ class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
                                      text: kcity.tr(),
                                      textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                                ),
-                               CustomDropDown(
-                                 hint: "الرياض",
+                               CustomCitiesDropDown(
+                                 hint: kcity.tr(),
+                                 select_city_status: true,
                                ),
                                Padding(
                                  padding: EdgeInsets.symmetric(vertical: Shared.width * 0.03),

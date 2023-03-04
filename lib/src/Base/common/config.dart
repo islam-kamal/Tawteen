@@ -1,5 +1,5 @@
-const String baseUrl = 'https://tga-test.master-works.sa:8443/';
-//const String baseUrl = 'https://rowad-alnaql.tga.gov.sa/';
+//const String baseUrl = 'https://tga-test.master-works.sa:8443/';
+const String baseUrl = 'https://rowad-alnaql.tga.gov.sa/';
 const int pageSize = 10;
 
 const String getAllJobsUrl = "api/v1/jobs/all?status=1";
@@ -12,3 +12,6 @@ const String getEductionMajorUrl = "api/v1/lookup/education-majors";
 const String getSkillsUrl = "api/v1/lookup/skills";
 const String uploadAttachmentsUrl = "api/v1/attachments";
 const String applyJobUrl = "api/v1/applicant-jobs";
+const String signinUrl = "api/v1/login";
+const String getAllIntativesUrl = "api/v1/initiatives?status=1";
+const String applyIntativeUrl = "api/v1/initiatives";

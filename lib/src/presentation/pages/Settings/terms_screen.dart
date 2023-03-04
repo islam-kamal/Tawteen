@@ -1,6 +1,8 @@
 import 'package:code/src/Base/common/file_export.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TermsScreen extends StatelessWidget {
+
   String? str = r"""<!-- HTML Codes by Quackit.com -->
 <!DOCTYPE html>
 <title>Text Example</title>
@@ -20,19 +22,22 @@ background-color: #ffffff;
 }
 </style>
 
-<div class="container">
-<h3 style="font-family:verdana;"> الشروط والأحكام</h3>
-<p></p>
-<p style="font-family:verdana;">هناك حقيقة مثبتة منذ زمن طويل وهي أن المحتوى المقروء لصفحة ما سيلهي القارئ عن التركيز على الشكل الخارجي للنص أو شكل توضع الفقرات في الصفحة التي يقرأها. ولذلك يتم استخدام طريقة لوريم إيبسوم لأنها تعطي توزيعاَ طبيعياَ -إلى حد ما- للأحرف عوضاً عن استخدام "هنا يوجد محتوى نصي، هنا يوجد محتوى نصي" فتجعلها تبدو (أي الأحرف) وكأنها نص مقروء. العديد من برامح النشر المكتبي وبرامح تحرير صفحات الويب تستخدم لوريم إيبسوم بشكل إفتراضي كنموذج عن النص، وإذا الفكاهية إليها.</p>
-<p></p>
-<h3 style="color:green;font-family:verdana;">عنوان فرعي</h3>
-<p></p>
-<p style="font-family:verdana;">أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات</p>
-<p></p>
-<h3 style="color:green;font-family:verdana;">عنوان فرعي</h3>
-<p></p>
-<p style="font-family:verdana;">أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات</p>
-</div>""";
+<div _ngcontent-xgf-c179="" class="bv"><div _ngcontent-xgf-c179="" class="container"><div _ngcontent-xgf-c179="" class="row">
+<div _ngcontent-xgf-c179="" class="col-12 col-lg-12"><div _ngcontent-xgf-c179="" class="m-crd pr">
+<h2 _ngcontent-xgf-c179="" class="mb-4">الاستخدام الآمن للأنظمة: </h2><h5 _ngcontent-xgf-c179="" class="start-in"> الدقة والضمانات </h5>
+<p _ngcontent-xgf-c179="" class="mb-3"> جميع المعلومات المقدمة على النظام مملوكة من قبل الهيئة ويتم تنفيذ أفضل الممارسات لضمان جودة وتحديث المعلومات. ومع ذلك، لا توجد ضمانات صريحة أو ضمنية حول دقة المعلومات المقدمة على النظام أو موثوقيتها أو توافرها وبالتالي لا تتحمل الهيئة مسؤولية أي معلومات غير دقيقة، أو غير كاملة، أو قديمة، أو أي إجراءات يتم اتخاذها فيما يتعلق بالمعلومات المقدمة. </p>
+<h5 _ngcontent-xgf-c179="" class="start-in"> اتاحة وتوفر النظام </h5>
+<p _ngcontent-xgf-c179="" class="mb-3">تبذُل الهيئة العامة للنقل أفضل جهد ممكن للحفاظ على تشغيل النظام بطريقة جيدة وسهلة، ولا تتحمل الهيئة أي مسؤولية ولن تكون خاضعة لأية مساءلة أو مطالبات لعدم توفر النظام بسبب مشاكل فنية خارجة عن سيطرة الهيئة. </p><h5 _ngcontent-xgf-c179="" class="start-in">
+ الروابط المتصلة بالمواقع الأخرى </h5><p _ngcontent-xgf-c179="" class="mb-3">
+ تبذُل الهيئة العامة للنقل أفضل جهد ممكن للحفاظ على تشغيل النظام بطريقة جيدة وسهلة، ولا تتحمل الهيئة أي مسؤولية ولن تكون خاضعة لأية مساءلة أو مطالبات لعدم توفر النظام بسبب مشاكل فنية خارجة عن سيطرة الهيئة. </p><div _ngcontent-xgf-c179="" class="box-skils">
+ <h5 _ngcontent-xgf-c179="" class="start-in"> اتفاقية المستخدم </h5>
+ <p _ngcontent-xgf-c179="">يوافق المستخدم على عدم استخدام، أو تشجيع، أو تعزيز، أو تسهيل، أو إرشاد الآخرين لاستخدام الخدمات على النحو التالي: </p>
+ <ul _ngcontent-xgf-c179=""><li _ngcontent-xgf-c179="">الدخول في أنشطة أو الترويج لها أو التشجيع عليها بما يخالف أي قانون، أو نظام، أو قرار حكومي، أو مرسوم ملكي ،أو اتفاقية قانونية أو سياسات منشورة صادرة عن الهيئة. </li>
+ <li _ngcontent-xgf-c179=""> الوصول إلى أي خدمة أو نظام أو البحث في نقاط الضعف فيه دون تصريح، بما في ذلك، على سبيل المثال لا الحصر، الانتهاكات أو عمليات مسح الثغرات الأمنية أو اختبار الاختراق. </li>
+ <li _ngcontent-xgf-c179="">استخدم المكتبة الرقمية لإنشاء</li><li _ngcontent-xgf-c179=""> 
+ تعطيل أي جانب من جوانب الخدمة أو التدخل فيه أو التحايل عليه؛ أو انتهاك أي إجراءات أمان أو مصادقة يستخدمها النظام أو الخدمة. </li>
+ <li _ngcontent-xgf-c179="">أي سرقة للموارد بما في ذلك المعلومات الحساسة. </li></ul></div></div></div>
+ </div></div></div>""";
   @override
   Widget build(BuildContext context) {
     return NetworkIndicator(
@@ -64,12 +69,21 @@ background-color: #ffffff;
                                 topLeft: Radius.circular(Shared.width * 0.08)),
                           ),
                           child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Shared.width * 0.05,vertical: Shared.width * 0.05),
-                            child: Scrollbar(
-                              child:  Html(
-                                data: str,
-                              ),
+                            child:  ListView(
+
+                              physics: AlwaysScrollableScrollPhysics(),
+                              children: [
+                                Html(
+                                  data: str,
+                                  onLinkTap: (url, _, __, ___) async {
+                                    await launchUrl(Uri.parse(url!),
+                                      mode: LaunchMode.inAppWebView,
+                                      webViewConfiguration: const WebViewConfiguration(
+                                          headers: <String, String>{'my_header_key': 'my_header_value'}),);
+
+                                  },
+                                ),
+                              ],
 
                             ),
                           )

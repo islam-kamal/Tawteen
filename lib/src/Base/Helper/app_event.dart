@@ -30,6 +30,8 @@ class GetApplicantDataEvent extends AppEvent{
   String? nationalId;
   GetApplicantDataEvent({this.nationalId});
 }
+
+
 //User info
 class UserInfoClick extends AppEvent{
   final String? token;
@@ -37,32 +39,14 @@ class UserInfoClick extends AppEvent{
   UserInfoClick({this.token});
 }
 
-//forget password events
-class sendOtpClick extends AppEvent{
-  final String? phone;
-  final String? route;
 
-  sendOtpClick({this.phone,this.route});
+
+
+class logoutClickEvent extends AppEvent{}
+
+class loginClickEvent extends AppEvent{
+
 }
-
-class checkOtpClick extends AppEvent{
-  final String? route;
-  final String? otp_code;
-  checkOtpClick({this.otp_code,this.route});
-}
-
-class resendOtpClick extends AppEvent{
-  final String? otp_code;
-  final String? route;
-
-  resendOtpClick({this.otp_code,this.route});
-}
-
-
-
-class logoutClick extends AppEvent{}
-
-
 
 
 //Cities
@@ -98,9 +82,31 @@ class ApplyJobEvent extends AppEvent{
 
 }
 
+class DeleteJobEvent extends AppEvent{
+
+}
 
 //PREVIOUS JOBS
 class GetPreviousJobsEvent extends AppEvent{
+
+}
+
+//PREVIOUS INITATIVES
+class GetPreviousInitativesEvent extends AppEvent{
+}
+
+//INIATIVES
+class GetAllInitativesEvent extends AppEvent{
+}
+class GetInitativesDtailsEvent extends AppEvent{
+  String? iniatives_id;
+  GetInitativesDtailsEvent({this.iniatives_id});
+}
+
+class ApplyInitativeEvent extends AppEvent{
+
+}
+class DeleteInitativeEvent extends AppEvent{
 
 }
 //COURSES

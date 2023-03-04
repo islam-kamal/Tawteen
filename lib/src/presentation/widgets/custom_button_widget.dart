@@ -11,7 +11,8 @@ class CustomButtonWidget extends StatelessWidget{
   Function()? onPress;
   double? width;
   double? height;
-  CustomButtonWidget({this.button_text,this.onPress, this.width , this.height });
+  Color? color;
+  CustomButtonWidget({this.button_text,this.onPress, this.width , this.height,this.color = kGreenColor });
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -22,7 +23,7 @@ class CustomButtonWidget extends StatelessWidget{
       child: Text(button_text!,style: TextStyle(fontSize: 16,color: kWhiteColor),),
       onPressed: onPress,
       style: ElevatedButton.styleFrom(
-          backgroundColor: kGreenColor,
+          backgroundColor: color,
 
           textStyle: TextStyle(
               fontSize: 30,
