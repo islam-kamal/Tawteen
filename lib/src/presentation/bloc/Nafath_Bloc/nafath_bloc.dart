@@ -12,6 +12,7 @@ class NafathBloc extends Bloc<AppEvent,AppState>{
     on<ApplicantCheckExistEvent>(_onApplicantCheckExistFun);
     on<GetApplicantDataEvent>(_onGetApplicantDataFun);
     on<loginClickEvent> (_onSigninFun);
+    on<ExpireWaitNafathStatusEvent>(_onExpireWaitFun);
   }
 
 
@@ -86,47 +87,44 @@ class NafathBloc extends Bloc<AppEvent,AppState>{
         }
         else if(nafathCheckStatusResponse.status ==  "WAITING"){
           print("WAITING 1");
-          print("88");
+          print("--- 1 ----");
           const oneSec = const Duration(seconds: 10);
+          print("--- 2 ----");
           timer = new Timer.periodic(
               oneSec,
                   (Timer timer) {
-                    if (_start > 30) {
+                print("_start : ${_start}");
+                print("--- 3 ----");
+                    if (_start > 30 ) {
+                      print("--- 4 ----");
                       timer.cancel();
                       print("%%%%%%%%%%%%%%% timer stopped %%%%%%%%%%%%%%%");
-                     Future.delayed(Duration(seconds: 2),
-                     ()async{
-                       emit(ErrorNafathCheckStatus(model: nafathCheckStatusResponse));
-                     });
+                      print("--- 5 ----");
+
+                      nafath_bloc.add(ExpireWaitNafathStatusEvent());
+                      print("--- 6 ----");
                     } else {
+                      print("--- 7 ----");
                       _start = _start + 10;
+                      print("--- 8 ----");
                       Shared.dismissDialog(context: navigatorKey.currentContext!);
+                      print("--- 9 ----");
                       nafath_bloc.add(CheckNafathStatusEvent(
                         nationalId: event.nationalId,
                         random: event.random!.toString(),
                         transId: event.transId!.toString(),
                       ));
+                      print("--- 10 ----");
                     }
               });
-  /*        timer = Timer.periodic(Duration(seconds: 10), (Timer t) async {
-            Shared.dismissDialog(context: navigatorKey.currentContext!);
-            nafath_bloc.add(CheckNafathStatusEvent(
-                nationalId: event.nationalId,
-                random: event.random!.toString(),
-                transId: event.transId!.toString(),
-            ));
-          });*/
-          print("99");
+
+          print("--- 11 ----");
           print("WAITING 2");
         }
         else if(nafathCheckStatusResponse.status ==  "EXPIRED"){
           print("EXPIRED 1");
           print("---10");
-      //    timer!.cancel();
-      //    Shared.dismissDialog(context: navigatorKey.currentContext!);
-      /*    nafath_bloc.add(SendNafathRequestEvent(
-              nationalId: event.nationalId
-          ));*/
+        timer!.cancel();
           print("---11");
           emit(ErrorNafathCheckStatus(model: nafathCheckStatusResponse));
           print("EXPIRED 2");
@@ -224,6 +222,20 @@ class NafathBloc extends Bloc<AppEvent,AppState>{
       }else{
         emit(ErrorSigin(model: siginResponse,message: siginResponse.message));
       }
+    } catch (e) {
+      emit(
+        ErrorLoading(
+          message: "Failed to fetch data. Is your device online ?",
+        ),
+      );
+    }
+  }
+
+  Future<void> _onExpireWaitFun(
+      ExpireWaitNafathStatusEvent event, Emitter<AppState> emit) async {
+    try {
+      emit(EmptyField());
+
     } catch (e) {
       emit(
         ErrorLoading(

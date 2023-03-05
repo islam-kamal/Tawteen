@@ -171,7 +171,6 @@ class SiginScreenState extends State<SiginScreen>{
                         sigin_button: false
                     );
                   }
-
                   else if(state is ErrorLoading){
                   Shared.dismissDialog(context: context);
                     print("ErrorLoading");
@@ -179,6 +178,16 @@ class SiginScreenState extends State<SiginScreen>{
                        error_status: true,
                         backend_message:  state.message!,
                      sigin_button: false
+                    );
+                  }
+                  else if(state is EmptyField){
+                    Shared.dismissDialog(context: context);
+                    print("EmptyField**********");
+                    customAnimatedPushNavigation(context, SiginScreen());
+                    Shared.showSnackBarView(
+                        error_status: true,
+                        backend_message:  knafath_expire.tr(),
+                        sigin_button: false
                     );
                   }
                 },
@@ -227,8 +236,8 @@ class SiginScreenState extends State<SiginScreen>{
                             width: Shared.width * 0.9,
                             height: Shared.width * 0.13,
                             onPress: ()async{
-                              nafath_bloc.add(loginClickEvent());
-                       /*       if(identityFormKey.currentState!.validate()){
+                           //   nafath_bloc.add(loginClickEvent());
+                            if(identityFormKey.currentState!.validate()){
                                 nafath_bloc.add(
                                  SendNafathRequestEvent(
                                     nationalId: identity_numbrerController.text//"1094486956"
@@ -240,7 +249,7 @@ class SiginScreenState extends State<SiginScreen>{
                                     error_status: true,
                                     sigin_button: false
                                 );
-                              }*/
+                              }
 
                               },
                           )

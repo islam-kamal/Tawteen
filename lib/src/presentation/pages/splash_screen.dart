@@ -24,16 +24,11 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+/*    //add default token until login through nafath
+    sharedPreferenceManager.writeData(CachingKey.AUTH_TOKEN,
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpa2FtYWxAbWFzdGVyLXdvcmtzLnNhIiwianRpIjoiYzFmOTQwMGQtMDkzNS00YjhhLWEyZTYtMzg4NDdmYTcwNmRhIiwiZW1haWwiOiJpa2FtYWxAbWFzdGVyLXdvcmtzLnNhIiwidWlkIjoiMTEyZTI4NmEtMjMyMS00MjJhLTk3ZjItNWE3NTAzOTY3MWM5IiwiaXAiOiIxMC4yMTcuOTcuMTcxIiwidXNlclR5cGVJZCI6IjMiLCJyb2xlcyI6IkFwcGxpY2FudCIsImV4cCI6MTY3ODA5NDcxNywiaXNzIjoiSWRlbnRpdHkiLCJhdWQiOiJJZGVudGl0eVVzZXIifQ.0277R07Cr33XyigKsb8tEAAuSTXq0pvibPcRqKHVqWY");
+   */
     authetication_fun();
-/*
- Timer(const Duration(milliseconds: 2000), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) =>Index()
-        ),
-      );
-    });
-*/
 
     super.initState();
   }
@@ -72,6 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (token == "null" || tokenhasExpired) {
       Shared.vistor_value = 'visitor';
       customAnimatedPushNavigation(context, Index());
+      print("Shared.vistor_value  : ${Shared.vistor_value }");
     }else{
       getUserData();
       customAnimatedPushNavigation(context, Index());
