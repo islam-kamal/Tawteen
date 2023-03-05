@@ -23,7 +23,7 @@
   "contact_us_message": "You can contact us via",
   "welcome": "Welcome",
   "submittedjobs": "submitted jobs",
-  "submittedinitatives" : "Initatives jobs",
+  "submittedinitatives" : "Initatives Initiatives",
   "lookingforjob": "Looking For Job",
   "trainingcourses": "Training Courses",
   "availablejobs": "Available Jobs",
@@ -111,5 +111,8 @@
   "supportdescription" : "Support Description",
   "supportterms" : "Support Terms",
   "requiredattachments" : "Required Attachments",
-  "submitinitatives" : "Submit Initatives"
+  "submitinitatives" : "Submit Initatives",
+  "fullname" : "Full Name",
+  "Enter_full_name" : "Enter Full Name",
+  "nafath_expire" : "you must access nafath app to accept code , try again"
 }

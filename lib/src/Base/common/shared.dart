@@ -67,6 +67,12 @@ class Shared {
     );
   }
 
+
+
+
+
+
+
   static double width = ScreenUtil.defaultSize.width;
   static double height = ScreenUtil.defaultSize.height;
   static const token = "Token";

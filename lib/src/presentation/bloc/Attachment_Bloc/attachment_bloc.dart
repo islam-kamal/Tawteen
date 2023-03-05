@@ -45,7 +45,7 @@ class AttachmentBloc extends Bloc<AppEvent,AppState>{
       if(response!.httpStatusCode == 200 ){
         emit( Done(model: response));
         attachments_bloc.add(GetAllAttachmentsEvent(
-            applicationId: "21",
+            applicationId: await sharedPreferenceManager.readString(CachingKey.APPLICANT_ID),
             applicationTypeId: "3"
         ));
       }else{

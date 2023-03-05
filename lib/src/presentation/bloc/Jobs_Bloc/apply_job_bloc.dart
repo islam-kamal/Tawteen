@@ -11,7 +11,10 @@ class ApplyJobBloc extends Bloc<AppEvent,AppState>{
     try {
 
       emit(Loading());
-      var response = await jobRepository.applyJobRequest();
+      var response = await jobRepository.applyJobRequest().onError((error, stackTrace){
+        print("error : ${error}");
+        print("stackTrace : ${stackTrace}");
+      });
       if(response!.succeeded!  ){
         emit( Done(model: response));
 

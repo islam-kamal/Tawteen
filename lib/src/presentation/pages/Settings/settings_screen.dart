@@ -2,7 +2,6 @@ import 'package:code/src/Base/common/file_export.dart';
 import 'package:code/src/presentation/pages/Settings/privacy_screen.dart';
 import 'package:code/src/presentation/pages/Settings/terms_screen.dart';
 import 'package:code/src/presentation/widgets/contact_us_dialog.dart';
-import 'package:code/src/presentation/widgets/custom_dropdown.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override

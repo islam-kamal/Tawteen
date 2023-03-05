@@ -111,5 +111,8 @@
   "supportdescription" : "وصف الدعم",
   "supportterms" : "شروط الدعم",
   "requiredattachments" : "المرفقات المطلوبة",
-  "submitinitatives" : "تقديم للمبادرة"
+  "submitinitatives" : "تقديم للمبادرة",
+  "fullname" : "الاسم الثلاثى",
+  "Enter_full_name" : "برجاء ادخال الاسم بالكامل",
+  "nafath_expire" : "يجب عليك الوصول إلى تطبيق نافاث لقبول الرمز ، حاول مرة أخرى"
 }

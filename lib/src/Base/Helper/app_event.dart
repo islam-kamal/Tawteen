@@ -22,6 +22,9 @@ class CheckNafathStatusEvent extends AppEvent{
   String? transId ; String? random;
   CheckNafathStatusEvent({this.nationalId,this.transId,this.random});
 }
+class ExpireWaitNafathStatusEvent extends AppEvent{
+  ExpireWaitNafathStatusEvent();
+}
 class ApplicantCheckExistEvent extends AppEvent{
   String? nationalId;
   ApplicantCheckExistEvent({this.nationalId});

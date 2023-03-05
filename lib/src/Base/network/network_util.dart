@@ -64,6 +64,7 @@ SharedPreferenceManager sharedPreferenceManager =SharedPreferenceManager();
 
 
   Future<ResponseType> delete<ResponseType extends Mappable>(ResponseType responseType,String url, {Map<String, dynamic>? headers}) {
+    print("delete url : ${url}");
     return dio
         .delete(
       url,
@@ -71,7 +72,7 @@ SharedPreferenceManager sharedPreferenceManager =SharedPreferenceManager();
 
     )
         .then((Response response) {
-
+      print("delete response : ${response}");
       return handleResponse(response, responseType);
     });
   }

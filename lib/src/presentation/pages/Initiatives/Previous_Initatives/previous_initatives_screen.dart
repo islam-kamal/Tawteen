@@ -114,7 +114,7 @@ class PreviousIntativesScreenState extends State<PreviousIntativesScreen> {
                                   bottom: Shared.width * 0.1,
                                 ),
                                 child: BlocBuilder(
-                                  bloc: previousJobsBloc,
+                                  bloc: previousInitativesBloc,
                                   builder: (context,state){
                                     if(state is Loading){
                                       return Padding(
@@ -202,23 +202,105 @@ class PreviousIntativesScreenState extends State<PreviousIntativesScreen> {
 
         ));
       },
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Shared.width * 0.02),
-                border: Border.all(color: kInactiveColor)),
-            height: Shared.width * 0.30,
-            child: Row(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: Shared.width * 0.01,
-                            horizontal: Shared.width * 0.02),
-                        child: Image.asset(ImageAssets.placeholder)
-                      /*FadeInImage(
+      child:   Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Shared.width * 0.02),
+              border: Border.all(color: kInactiveColor)),
+          height: Shared.width * 0.35,
+          child: Column(
+            children: [
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: Shared.width * 0.03,),
+                  decoration: BoxDecoration(
+                      color: status_color(previous_job!.status ).color,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(Shared.width * 0.02),
+                          topRight:  Radius.circular(Shared.width * 0.02))
+                  ),
+                  child:    Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          child: Row(
+                            children: [
+                              Text(
+                                "${status_color(previous_job.status ).status}",
+                                style: TextStyle(fontWeight: FontWeight.normal,color: kWhiteColor),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          )),
+                      Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+
+                                  },
+                                  icon: Row(
+                                    children: [
+                                    Expanded(child: Image.asset(
+                                      ImageAssets.editIcon,
+                                      height: 15,
+                                      color: kWhiteColor,
+                                    )),
+        Expanded(child:    Text(
+                                        kupdate.tr(),
+                                        style: TextStyle(fontWeight: FontWeight.normal,color: kWhiteColor),
+                                        textAlign: TextAlign.center,
+        )),
+
+                                    ],
+                          )),
+    ] ))
+                    ],
+                  )
+                        /*Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    children: [
+                      Text(
+                        "${status_color(previous_job.status ).status}",
+                        style: TextStyle(fontWeight: FontWeight.normal,color: kWhiteColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      IconButton(
+                        onPressed: () {
+
+                        },
+                        icon: Row(
+                          children: [
+                            Padding(padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Image.asset(
+                                ImageAssets.editIcon,
+                                height: 15,
+                                color: kWhiteColor,
+                              ),),
+                            Text(
+                              kupdate.tr(),
+                              style: TextStyle(fontWeight: FontWeight.normal,color: kWhiteColor),
+                              textAlign: TextAlign.center,
+                            ),
+
+                          ],
+                        ),
+                      ),
+                
+                    ],
+                  )*/
+              ),
+              Padding(padding: EdgeInsets.symmetric(vertical: Shared.width * 0.02),
+                  child:      Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(
+
+                                  horizontal: Shared.width * 0.02),
+                              child: Image.asset(ImageAssets.placeholder)
+                            /*FadeInImage(
                   image: NetworkImage(
                       baseUrl + previous_job!.attachments!.firstWhere((element) => element.status ==1).filePath!
                   ),
@@ -231,94 +313,75 @@ class PreviousIntativesScreenState extends State<PreviousIntativesScreen> {
                   },
                   fit: BoxFit.cover,
                 )*/
-                    )),
-                Expanded(
-                    flex: 4,
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: Shared.width * 0.05,
-                            horizontal: Shared.width * 0.01),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: Shared.width * 0.02,
-                                ),
-                                child: Text(
-                                  previous_job!.jobTitleName!,
-                                  style: TextStyle(
-                                      fontSize: Shared.width * 0.04,
-                                      fontWeight: FontWeight.bold,
-                                      color: kBlackColor),
-                                )),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "تاريخ النشر : ",
-                                          style: TextStyle(
-                                              fontSize: Shared.width * 0.03,
-                                              color: kGreyColor),
-                                        ),
-                                        Text(
-                                          previous_job.creationDate!.substring(0,10),
-                                          style: TextStyle(
-                                              fontSize: Shared.width * 0.03,
-                                              color: kGreyColor),
-                                        ),
-                                      ],
-                                    )),
-                                Expanded(
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "تاريخ الانتهاء : ",
-                                          style: TextStyle(
-                                              fontSize: Shared.width * 0.03,
-                                              color: kGreyColor),
-                                        ),
-                                        Text(
-                                          previous_job.endDateOfApplicantsAcceptance!.substring(0,10),
-                                          style: TextStyle(
-                                              fontSize: Shared.width * 0.03,
-                                              color: kGreyColor),
-                                        ),
-                                      ],
-                                    )),
-                              ],
-                            )
-                          ],
-                        )))
-              ],
-            ),
-          ),
-          Positioned(
-              top: 0,
-              left: translator.activeLanguageCode == 'ar' ? 0 : null,
-              right: translator.activeLanguageCode == 'ar' ? null : 0,
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 5,horizontal: Shared.width * 0.03),
-                decoration: BoxDecoration(
-                    color: status_color(previous_job.status ).color,
-                    borderRadius: BorderRadius.only(
-                        topLeft: translator.activeLanguageCode == 'ar'
-                            ? Radius.circular(Shared.width * 0.02)
-                            : Radius.circular(0),
-                        topRight: translator.activeLanguageCode == 'ar'
-                            ? Radius.circular(0)
-                            : Radius.circular(Shared.width * 0.02))),
-                child: Text(
-                  "${status_color(previous_job.status ).status}",
-                  style: TextStyle(fontWeight: FontWeight.normal,color: kWhiteColor),
-                  textAlign: TextAlign.center,
-                ),
-              ))
-        ],
+                          )),
+                      Expanded(
+                          flex: 4,
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(
+
+                                  horizontal: Shared.width * 0.01),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: Shared.width * 0.02,
+                                      ),
+                                      child: Text(
+                                        previous_job!.jobTitleName!,
+                                        style: TextStyle(
+                                            fontSize: Shared.width * 0.04,
+                                            fontWeight: FontWeight.bold,
+                                            color: kBlackColor),
+                                      )),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "تاريخ النشر : ",
+                                                style: TextStyle(
+                                                    fontSize: Shared.width * 0.03,
+                                                    color: kGreyColor),
+                                              ),
+                                              Text(
+                                                previous_job.creationDate!.substring(0,10),
+                                                style: TextStyle(
+                                                    fontSize: Shared.width * 0.03,
+                                                    color: kGreyColor),
+                                              ),
+                                            ],
+                                          )),
+                                      Expanded(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "تاريخ الانتهاء : ",
+                                                style: TextStyle(
+                                                    fontSize: Shared.width * 0.03,
+                                                    color: kGreyColor),
+                                              ),
+                                              Text(
+                                                previous_job.endDateOfApplicantsAcceptance!.substring(0,10),
+                                                style: TextStyle(
+                                                    fontSize: Shared.width * 0.03,
+                                                    color: kGreyColor),
+                                              ),
+                                            ],
+                                          )),
+                                    ],
+                                  )
+                                ],
+                              )))
+                    ],
+                  )    ),
+            ],
+          )
+
+
       ),
     );
   }

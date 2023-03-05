@@ -94,7 +94,7 @@ class InitativesBloc extends Bloc<AppEvent,AppState>{
     try {
 
       emit(Loading());
-      var response = await intativesRepository.deleteintativeRequest().onError((error, stackTrace){
+      var response = await intativesRepository.deleteIntativeRequest().onError((error, stackTrace){
         print("error : ${error}");
         print("stackTrace : ${stackTrace}");
       });

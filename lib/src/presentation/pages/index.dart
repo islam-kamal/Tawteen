@@ -101,6 +101,7 @@ class IndexState extends State<Index> {
 var indexKey = GlobalKey();
   @override
   void initState() {
+
     var screenTitleProvider =
         Provider.of<ScreenTitleProvider>(context, listen: false);
 

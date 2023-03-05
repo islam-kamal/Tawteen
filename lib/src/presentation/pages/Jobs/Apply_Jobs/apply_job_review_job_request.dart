@@ -19,13 +19,18 @@ class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
 
   @override
   void initState() {
-    attachments_bloc.add(GetAllAttachmentsEvent(
-        applicationId: "21",
-        applicationTypeId: "3"
-    ));
+    get_attachments();
     super.initState();
   }
+  void get_attachments()async{
+    await sharedPreferenceManager.readInt(CachingKey.APPLICANT_ID).then((value){
+      attachments_bloc.add(GetAllAttachmentsEvent(
+          applicationId: value.toString(),
+          applicationTypeId: "3"
+      ));
+    });
 
+  }
   @override
   Widget build(BuildContext context) {
     return NetworkIndicator(
@@ -46,13 +51,15 @@ class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
             if(state is Loading){
             print("Loading");
             Shared.showLoadingDialog(context: context);
-            }else if(state is Done){
+            }
+            else if(state is Done){
             print("Done");
             Shared.dismissDialog(context: context);
 
             customAnimatedPushNavigation(context, ThanksScreen());
 
-            }else if(state is ErrorLoading){
+            }
+            else if(state is ErrorLoading){
             print("ErrorLoading : ${ state.message}");
             Shared.dismissDialog(context: context);
             Shared.showSnackBarView(
@@ -224,6 +231,7 @@ class ReviewJobRequestWidgetState extends State<ReviewJobRequestWidget> {
                                    return Container();
                                  },
                                ),
+
                                Padding(
                                    padding: EdgeInsets.symmetric(vertical: Shared.width * 0.1),
                                    child: CustomButtonWidget(

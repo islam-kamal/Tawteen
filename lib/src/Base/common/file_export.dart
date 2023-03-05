@@ -49,7 +49,6 @@ export 'package:code/src/Base/common/local_const.dart';
 export 'package:code/src/Base/common/shared.dart';
 export 'package:code/src/Base/common/theme.dart';
 export 'package:code/src/Base/common/image_manger.dart';
-export 'package:code/src/presentation/widgets/custom_dropdown.dart';
 export 'package:code/src/presentation/pages/Profile/profile_contact_info_widget.dart';
 export 'package:code/src/presentation/widgets/profile_pages_indicator.dart';
 export 'package:code/src/presentation/widgets/apply_job_indicator.dart';

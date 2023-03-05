@@ -50,6 +50,7 @@ class AttachmentsRepository {
         .add(await http.MultipartFile.fromPath('CreateAttachements', '${createAttachements![0].path}')); // file you want to upload
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
+    print("request : ${request.fields}");
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
       return true;

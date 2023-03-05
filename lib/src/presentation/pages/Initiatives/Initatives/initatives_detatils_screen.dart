@@ -4,6 +4,7 @@ import 'package:code/src/data/models/JobModel/job_details_model.dart';
 import 'package:code/src/presentation/bloc/Initatives_Bloc/initatives_bloc.dart';
 import 'package:code/src/presentation/bloc/Jobs_Bloc/apply_job_bloc.dart';
 import 'package:code/src/presentation/bloc/Jobs_Bloc/get_all_jobs_bloc.dart';
+import 'package:code/src/presentation/pages/Initiatives/Initatives/apply_initative_screen.dart';
 import 'package:code/src/presentation/pages/Initiatives/Previous_Initatives/previous_initatives_screen.dart';
 import 'package:code/src/presentation/pages/Jobs/Apply_Jobs/apply_job_person_info.dart';
 import 'package:code/src/presentation/pages/Jobs/Previous_Jobs/previous_jobs_screen.dart';
@@ -135,10 +136,10 @@ class InitativesDetailsScreenState extends State<InitativesDetailsScreen> {
                                                           ),
                                                           child: Column(
                                                             children: [
-                                                              job_details_header(
+                                                              initative_details_header(
                                                                   initativesDetails: snapshot.data!.data
                                                               ),
-                                                              job_details_body(
+                                                              initative_details_body(
                                                                   initativesDetails: snapshot.data!.data
                                                               ),
                                                               widget.show_cancellation_status!
@@ -150,7 +151,7 @@ class InitativesDetailsScreenState extends State<InitativesDetailsScreen> {
                                                                     height: Shared.width * 0.13  ,
                                                                     color: kRedColor,
                                                                     onPress: () {
-                                                                      apply_job_bloc.add(DeleteJobEvent());
+                                                                      initatives_bloc.add(DeleteInitativeEvent());
                                                                     },
                                                                   )) : Container()
                                                                   : Padding(
@@ -169,7 +170,9 @@ class InitativesDetailsScreenState extends State<InitativesDetailsScreen> {
                                                                       }
                                                                       else{
                                                                         customAnimatedPushNavigation(
-                                                                            context, ApplyJobPersonInfo());
+                                                                            context, ApplyInitativeScreen(
+                                                                          initativesDetails: snapshot.data!.data!,
+                                                                        ));
                                                                       }
 
                                                                     },
@@ -201,7 +204,7 @@ class InitativesDetailsScreenState extends State<InitativesDetailsScreen> {
     );
   }
 
-  Widget job_details_header({InitativesDetails? initativesDetails}) {
+  Widget initative_details_header({InitativesDetails? initativesDetails}) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Shared.width * 0.02),
@@ -250,7 +253,7 @@ class InitativesDetailsScreenState extends State<InitativesDetailsScreen> {
     );
   }
 
-  Widget job_details_body({InitativesDetails? initativesDetails}) {
+  Widget initative_details_body({InitativesDetails? initativesDetails}) {
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Shared.width * 0.02),

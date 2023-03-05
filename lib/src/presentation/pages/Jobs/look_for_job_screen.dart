@@ -3,7 +3,6 @@ import 'package:code/src/presentation/bloc/Jobs_Bloc/search_jobs_bloc.dart';
 import 'package:code/src/presentation/pages/Jobs/jobs_search_results_screen.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_cities_dropdown.dart';
 import 'package:code/src/presentation/widgets/Dropdown/custom_job_titles_dropdown.dart';
-import 'package:code/src/presentation/widgets/custom_dropdown.dart';
 
 import '../../widgets/calendar.dart';
 

@@ -28,4 +28,5 @@ class ImageAssets {
   static const String placeholder ="$imagePath/placeholder.png";
   static const String congratulations = "$imagePath/congratulations.png";
   static const String error = "$imagePath/error.png";
+  static const String editIcon = "$imagePath/edit.png";
 }

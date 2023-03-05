@@ -23,18 +23,25 @@ class AttachmentWidgetState extends State<AttachmentWidget> {
     ResumeEntity(title: "ahmed_khaled_cv", selected: false, remove: () {}),
     ResumeEntity(title: "osman_ibrahem_cv", selected: false, remove: () {}),
   ];
-
+  var applicant_id;
   final fileFormKey = GlobalKey<FormState>();
   var file_name = TextEditingController();
   bool upload_file_loading = false;
 Attachment? attachment;
   @override
   void initState() {
-    attachments_bloc.add(GetAllAttachmentsEvent(
-      applicationId: "21",
-      applicationTypeId: "3"
-    ));
+    get_attachments();
     super.initState();
+  }
+  void get_attachments()async{
+    await sharedPreferenceManager.readInt(CachingKey.APPLICANT_ID).then((value){
+      applicant_id = value.toString();
+      attachments_bloc.add(GetAllAttachmentsEvent(
+          applicationId: applicant_id,
+          applicationTypeId: "3"
+      ));
+    });
+
   }
   String? seleted_resume_id = "1" ;
   String? seleted_certifications_id = "1" ;
@@ -91,11 +98,11 @@ Attachment? attachment;
                                       child: Shared.spinkit
                                   ),
                                 );
-                              }else if(state is Done){
+                              }
+                              else if(state is Done){
                                 return StreamBuilder<AttachmentModel>(
                                     stream: attachments_bloc.all_attachments_subject,
                                     builder: (context,snapshot){
-
                                       switch (snapshot.connectionState) {
                                         case ConnectionState.none:
                                           return Padding(
@@ -119,11 +126,12 @@ Attachment? attachment;
                                               child: Text(snapshot.error.toString()),
                                             );
                                           }
-                                          else  {
+                                          else {
                                             snapshot.data!.data!.forEach((element) {
                                               if(element.refIdType == 1){
                                                 resumes_list!.add(element);
-                                              }else{
+                                              }
+                                              else{
                                                 certifications_list!.add(element);
                                               }
                                             });
@@ -169,10 +177,10 @@ Attachment? attachment;
                                                         ))
                                                   ],
                                                 ),
-                                                resumes_list!.isEmpty ? no_data_widget():     Container(
+                                                Container(
                                                   width: Shared.width,
                                                   child: ListView.builder(
-                                                      itemCount: resumes_list!.length,
+                                                      itemCount:  snapshot.data!.data!.where((element) => element.refIdType == 1).length,
                                                       shrinkWrap: true,
                                                       physics: NeverScrollableScrollPhysics(),
                                                       itemBuilder: (context, index) {
@@ -268,26 +276,6 @@ Attachment? attachment;
                                                         ))
                                                   ],
                                                 ),
-                                                /*Container(
-                                width: Shared.width,
-                                child: ListView.builder(
-                                    itemCount: resume_list.length,
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 5),
-                                        child: attachment_shape(
-                                          title: resume_list[index].title,
-                                          remove: (){
-
-                                          },
-                                          selected: resume_list[index].selected,
-                                        ),
-                                      );
-                                    }),
-                              ),*/
                                                 resumes_list!.isEmpty ? no_data_widget():    Container(
                                                   width: Shared.width,
                                                   child: ListView.builder(
@@ -356,7 +344,9 @@ Attachment? attachment;
                                                       width: Shared.width,
                                                       height: Shared.width * 0.13,
                                                       onPress: () {
-                                                        if(resumes_list!.isEmpty || certifications_list!.isEmpty){
+                                                        print("resumes_list : ${resumes_list}");
+                                                        print("certifications_list : ${certifications_list}");
+                                                        if(resumes_list!.isEmpty && certifications_list!.isEmpty){
                                                           Shared.showSnackBarView(
                                                               message:  kupload_rsumes_message,
                                                               error_status: true,
@@ -375,8 +365,8 @@ Attachment? attachment;
 
                                       }
                                     });
-
-                              }else if(state is ErrorLoading){
+                              }
+                              else if(state is ErrorLoading){
                                 return no_data_widget(context: context);
                               }
                               return Container();
@@ -460,7 +450,7 @@ Attachment? attachment;
                     });
                     await   attachment_repository.uploadAttachment(
                         title: file_name.text,
-                        refId: "21",
+                        refId: applicant_id.toString(),
                         // if document_type= 1 indicate that will upload resume if document_type= 2 indicate that will upload Certification
                         refIdType: "${document_type}",
                         refObj: "3",
@@ -468,14 +458,11 @@ Attachment? attachment;
                         createAttachements:value.files
                     ).then((value){
                       print("value : ${value}");
-                      setState(() {
+                      setState(()  {
                         if(value){
                           upload_file_loading = false;
                           Navigator.pop(context);
-                          attachments_bloc.add(GetAllAttachmentsEvent(
-                              applicationId: "21",
-                              applicationTypeId: "3"
-                          ));
+                        get_attachments();
                         }else{
                           upload_file_loading = false;
                         }

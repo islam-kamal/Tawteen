@@ -13,7 +13,7 @@ class SavedJobsDropDown extends StatefulWidget {
 class _SavedJobsDropDownState extends State<SavedJobsDropDown> {
   var items = [
     ksubmittedjobs.tr(),
-    kpreviousinitiatives.tr()
+    ksubmitinitatives.tr()
   ];
   @override
   Widget build(BuildContext context) {
