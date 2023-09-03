@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "975175297194",
+    "project_id": "tawteen-eb3fb",
+    "storage_bucket": "tawteen-eb3fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975175297194:android:0574bc85f20c89712488d3",
+        "android_client_info": {
+          "package_name": "com.app.tawteen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975175297194-6ssuc2nl7egesg9dmqfb951cbb8ecmck.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4Di0YfDg15Op39QjwBNDQd_MnuqHpwtU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975175297194-6ssuc2nl7egesg9dmqfb951cbb8ecmck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
